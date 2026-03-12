@@ -1,0 +1,5 @@
+mechanism,benchmark,n_procs,msg_size_bytes,placement,iterations,avg_ns,p50_ns,p99_ns,min_ns,max_ns,throughput_msg_s,throughput_MB_s
+mq_posix,fanin_n1,2,64,unspecified,5000,766.2,0.0,0.0,0.0,0.0,1305206,79.663
+mq_posix,fanin_n2,3,64,unspecified,10000,747.4,0.0,0.0,0.0,0.0,1337906,81.659
+mq_posix,fanin_n4,5,64,unspecified,20000,1465.8,0.0,0.0,0.0,0.0,682226,41.640
+mq_posix,fanin_n8,9,64,unspecified,40000,1265.7,0.0,0.0,0.0,0.0,790098,48.224

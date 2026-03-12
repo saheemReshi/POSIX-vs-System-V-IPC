@@ -1,0 +1,5 @@
+mechanism,benchmark,n_procs,msg_size_bytes,placement,iterations,avg_ns,p50_ns,p99_ns,min_ns,max_ns,throughput_msg_s,throughput_MB_s
+mq_posix,pingpong,2,8,unspecified,20000,5044.7,4744.0,8801.0,3216.0,555030.0,98561,1.504
+mq_posix,pingpong,2,64,unspecified,20000,5093.7,5220.0,7343.0,3907.0,498360.0,97581,11.912
+mq_posix,pingpong,2,256,unspecified,20000,4644.6,4117.0,7003.0,3857.0,75526.0,107068,52.279
+mq_posix,pingpong,2,1024,unspecified,20000,5314.6,4944.0,7554.0,3286.0,290735.0,93459,182.538
