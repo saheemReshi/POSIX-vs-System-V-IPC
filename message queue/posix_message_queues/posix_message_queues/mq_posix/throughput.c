@@ -52,6 +52,15 @@ static void run_consumer(mqd_t q, uint64_t n, size_t msz)
     }
     (void)sink;
     free(buf);
+    /*In performance measurements you must ensure the compiler cannot eliminate work.
+    Without the sink trick the compiler might conclude:  (using volatile, so compiler doesn't use aggressive optimisations)
+    buf contents are never used
+    and remove the buffer read.
+    Then you would measure:
+    mq_receive() + minimal code
+    instead of
+    mq_receive() + real memory access
+    which makes the benchmark unrealistic.*/
 }
 
 int main(int argc, char *argv[])

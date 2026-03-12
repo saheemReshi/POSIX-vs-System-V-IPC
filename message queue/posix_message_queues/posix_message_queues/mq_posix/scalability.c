@@ -69,7 +69,7 @@ static int run_c1(int n, uint32_t k, size_t msz, const char *label)
     if (depth > 1024) depth = 1024;
 
     struct mq_attr attr = { .mq_maxmsg = depth, .mq_msgsize = (long)msz };
-    mq_unlink(C1_Q);
+    mq_unlink(C1_Q);//remove any old queue with same name
 
     /* Open one write descriptor per producer + one read descriptor for
      * the consumer, all before any fork() so there is no startup race. */
