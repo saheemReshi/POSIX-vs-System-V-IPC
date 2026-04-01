@@ -1,0 +1,15 @@
+mechanism,benchmark,n_procs,msg_size_bytes,placement,iterations,avg_ns,p50_ns,p99_ns,min_ns,max_ns,throughput_msg_s,throughput_MB_s
+sem_posix,pingpong,2,0,same_core,10000,2702.9,2549.0,3526.0,2490.0,80756.0,183915,0.000
+sem_posix,pingpong,2,0,diff_core,10000,4052.6,3717.0,5380.0,3401.0,1218395.0,122932,0.000
+sem_posix,throughput,2,0,depth_1,100000,7240.7,0.0,0.0,0.0,0.0,138109,0.000
+sem_posix,throughput,2,0,depth_16,100000,126.6,0.0,0.0,0.0,0.0,7899965,0.000
+sem_posix,throughput,2,0,depth_64,100000,274.2,0.0,0.0,0.0,0.0,3647119,0.000
+sem_posix,throughput,2,0,depth_256,100000,75.4,0.0,0.0,0.0,0.0,13259670,0.000
+sem_posix,fanin_n1,2,0,fanin,5000,54.3,0.0,0.0,0.0,0.0,18405360,0.000
+sem_posix,fanin_n2,3,0,fanin,10000,34.5,0.0,0.0,0.0,0.0,28968966,0.000
+sem_posix,fanin_n4,5,0,fanin,20000,28.2,0.0,0.0,0.0,0.0,35502097,0.000
+sem_posix,fanin_n8,9,0,fanin,40000,26.6,0.0,0.0,0.0,0.0,37572197,0.000
+sem_posix,pairs_n1,2,0,pairs,2000,4062.1,3912.0,5826.0,3481.0,73468.0,0,0.000
+sem_posix,pairs_n2,4,0,pairs,4000,4538.0,4789.0,6602.0,3476.0,47914.0,0,0.000
+sem_posix,pairs_n4,8,0,pairs,8000,4582.3,4483.0,7369.0,230.0,118227.0,0,0.000
+sem_posix,pairs_n8,16,0,pairs,16000,6463.6,4749.0,17052.0,145.0,1496472.0,0,0.000
