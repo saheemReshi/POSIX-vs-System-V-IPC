@@ -34,7 +34,7 @@
 #include "../common/timing.h"
 #include "../common/affinity.h"
 
-#define KEY_THROUGHPUT  0x1TP01
+#define KEY_THROUGHPUT  0x1AB20
 
 #define MTYPE_MSG  1L
 

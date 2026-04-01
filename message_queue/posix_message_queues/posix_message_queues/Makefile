@@ -40,7 +40,23 @@ test: all
 	@echo "=== passed ==="
 
 run_all: all | $(RESDIR)
-	bash scripts/run_all.sh
+# 	bash scripts/run_all.sh
+	./bin/pingpong -n 20000 -s 8    >> results/pingpong.csv                                                       
+	./bin/pingpong -n 20000 -s 64   >> results/pingpong.csv
+	./bin/pingpong -n 20000 -s 256  >> results/pingpong.csv
+	./bin/pingpong -n 20000 -s 1024 >> results/pingpong.csv
+	./bin/throughput -n 100000 -s 8   -q 64 >> results/throughput.csv                                             
+	./bin/throughput -n 100000 -s 64  -q 64 >> results/throughput.csv
+	./bin/throughput -n 100000 -s 256 -q 64 >> results/throughput.csv
+	./bin/throughput -n 100000 -s 1024 -q 64 >> results/throughput.csv
+	./bin/scalability -m c1 -n 1 -k 5000 >> results/scalability_c1.csv                                            
+	./bin/scalability -m c1 -n 2 -k 5000 >> results/scalability_c1.csv
+	./bin/scalability -m c1 -n 4 -k 5000 >> results/scalability_c1.csv
+	./bin/scalability -m c1 -n 8 -k 5000 >> results/scalability_c1.csv
+	./bin/scalability -m c2 -n 1 -k 5000 >> results/scalability_c2.csv                                         
+	./bin/scalability -m c2 -n 2 -k 5000 >> results/scalability_c2.csv
+	./bin/scalability -m c2 -n 4 -k 5000 >> results/scalability_c2.csv
+	./bin/scalability -m c2 -n 8 -k 5000 >> results/scalability_c2.csv
 
 clean:
 	rm -rf $(BINDIR)

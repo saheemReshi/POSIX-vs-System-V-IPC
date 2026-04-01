@@ -41,8 +41,8 @@
 #include "../common/stats.h"
 
 /* Arbitrary IPC keys — change if they collide on your system */
-#define KEY_FWD  0x1PP1F
-#define KEY_BWD  0x1PP1B
+#define KEY_FWD  0x1AB1F
+#define KEY_BWD  0x1AB1B
 
 /* mtype values — only one queue per msqid so any positive value works */
 #define MTYPE_MSG  1L
