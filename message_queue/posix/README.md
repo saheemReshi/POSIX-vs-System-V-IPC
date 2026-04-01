@@ -4,6 +4,17 @@ Measures kernel-level IPC performance using **POSIX message queues exclusively**
 Every send and receive goes through the kernel via `mq_send` / `mq_receive`.
 No shared memory. No semaphores. No pipes.
 
+## Quick Start
+
+Run the complete test suite and performance profiling with the following `make` targets:
+
+```bash
+make all              # compile all three binaries
+make test             # smoke test (small iteration counts)
+make run_all          # full sweep → results/results.csv
+make run_perf_stat    # full sweep with CPU hardware counters (perf stat)
+make run_perf_record  # full sweep with performance sampling (perf record)
+
 ---
 
 ## Kernel Requirement
