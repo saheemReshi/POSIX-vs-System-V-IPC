@@ -1,79 +1,113 @@
-## IPC Benchmark Suite — System V Message Queues
-## make all     — build all three binaries into bin/
-## make test    — smoke test with small iteration counts
-## make setup_sysctl — raise kernel MQ limits (requires sudo)
-## make run_all — full sweep → results/sysv_results.csv
-## make clean   — remove binaries and any stale System V queue entries
+## IPC Benchmark Suite — POSIX Message Queues
+##
+## Targets:
+##   make all            — build all three binaries into bin/
+##   make test           — quick smoke test (sanity check only)
+##   make setup_sysctl   — raise kernel MQ limits (requires sudo)
+##   make run_all        — comprehensive sweep → results/posix_results.csv
+##   make clean          — remove binaries and any stale mqueue entries [cite: 13, 14]
+##
+## Required sysctl (run 'make setup_sysctl' or see below):
+##   fs.mqueue.msg_max    >= 1024   (queue depth for throughput + fanin tests)
+##   fs.mqueue.msgsize_max >= 8192  (for 4096 and 8192-byte message tests) [cite: 14]
+##
+## CPU pinning (-c cpu0,cpu1):
+##   same_core = both processes on CPU 0    → pure scheduling / context-switch cost
+##   diff_core = CPU 0 vs CPU 1             → cache-line round-trip, cross-core cost
+##   If your machine has only one CPU, remove the -c flags or pass -c 0,0. [cite: 14, 15]
 
-CC     := gcc
-CFLAGS := -O2 -Wall -Wextra -D_GNU_SOURCE -I$(CURDIR)/common
-# System V MQ uses no extra link library [cite: 3]
-LIBS   := -lm
+CC      := gcc
+CFLAGS  := -O2 -Wall -Wextra -D_GNU_SOURCE -I$(CURDIR)/common
+LIBS    := -lrt -lm
 
-BINDIR := bin
-RESDIR := results
-SYSV_CSV := $(RESDIR)/sysv_results.csv
+PERFDIR := results/perf
+# The hardware/kernel events we want to count
+PERF_EVENTS := cs,migrations,cache-references,cache-misses,cycles,instructions
+
+BINDIR     := bin
+RESDIR     := results
+POSIX_CSV  := $(RESDIR)/posix_results.csv
 
 PP  := $(BINDIR)/pingpong
 TP  := $(BINDIR)/throughput
 SC  := $(BINDIR)/scalability
 
-# IPC keys used in the source files (hex) [cite: 3]
-KEY_FWD    := 0x1AB1F
-KEY_BWD    := 0x1AB1B
-KEY_TPUT   := 0x1AB20
-KEY_C1     := 0x5C1000
-KEY_C2_FWD := 0x5C2F00   # base; pairs use base+0 … base+7 [cite: 4]
-KEY_C2_BWD := 0x5C2B00
-
-# ── Iteration / message counts (Matched to POSIX) ──────────────────────────
+# ── Iteration / message counts ─────────────────────────────────────────────
+# PP_ITERS : large enough for stable p99 (tail latency is the interesting metric)
+# TP_MSGS  : amortises fork+queue-open overhead; keep producer loop dominant [cite: 15, 16]
+# SC_K     : msgs per producer/pair in scalability tests [cite: 16]
 PP_ITERS := 50000
 TP_MSGS  := 200000
 SC_K     := 10000
 
-# ── Message sizes (bytes) (Matched to POSIX) ───────────────────────────────
+# ── Message sizes (bytes) ──────────────────────────────────────────────────
+# 8     → sub-cache-line; header/signal-only IPC [cite: 16, 17]
+# 64    → one cache line; typical small IPC payload [cite: 17, 18]
+# 256   → moderate payload (e.g. a small struct)
+# 1024  → 1 KB; command/response in a server [cite: 18, 19]
+# 4096  → one page; shows copy cost inflection
+# 8192  → kernel default msgsize_max ceiling [cite: 19]
 SIZES := 8 64 256 1024 4096 8192
 
 .PHONY: all test setup_sysctl run_all clean
 
+# ── Build ──────────────────────────────────────────────────────────────────
 all: $(PP) $(TP) $(SC)
 
+$(RESDIR):
+	mkdir -p $(RESDIR)
+
+$(PERFDIR):
+	mkdir -p $(PERFDIR)
 $(BINDIR):
 	mkdir -p $(BINDIR)
 
 $(RESDIR):
 	mkdir -p $(RESDIR)
 
-$(PP): mq_sysv/pingpong.c common/*.h | $(BINDIR)
+$(PP): mq_posix/pingpong.c common/*.h | $(BINDIR)
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
 
-$(TP): mq_sysv/throughput.c common/*.h | $(BINDIR)
+$(TP): mq_posix/throughput.c common/*.h | $(BINDIR)
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
 
-$(SC): mq_sysv/scalability.c common/*.h | $(BINDIR)
+$(SC): mq_posix/scalability.c common/*.h | $(BINDIR)
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
 
 # ── Sysctl setup ───────────────────────────────────────────────────────────
+# Raises kernel MQ limits so all test cases can run without "mq_open: Invalid
+# argument" errors. Temporary — reverts on reboot. [cite: 21, 22]
 setup_sysctl:
-	@echo "Configuring System V IPC kernel limits..."
-	sudo sysctl -w kernel.msgmax=8192
-	sudo sysctl -w kernel.msgmnb=8388608
-	sudo sysctl -w kernel.msgmni=1024
-	@echo "Done."
+	@echo "Current limits:"
+	@sysctl fs.mqueue.msg_max fs.mqueue.msgsize_max
+	sudo sysctl -w fs.mqueue.msg_max=1024
+	sudo sysctl -w fs.mqueue.msgsize_max=8192
+	@echo "Done. Limits will revert on reboot."
+	@echo "To make permanent, add to /etc/sysctl.conf." [cite: 22, 23]
 
+# ── Smoke test ─────────────────────────────────────────────────────────────
+# Runs every benchmark with tiny counts to confirm binaries work correctly.
+# Prints one header + a few CSV rows; does not write any files. [cite: 23, 24]
 test: all
 	@echo "=== smoke test ==="
 	$(PP) -H
-	$(PP) -n 200  -s 64   -p same_core
-	$(TP) -n 1000 -s 64   -p diff_core
-	$(SC) -m c1 -n 2 -k 200 -p mixed
-	$(SC) -m c2 -n 2 -k 200 -p mixed
+	$(PP) -n 500  -s 64  -c 0,0 -p same_core
+	$(PP) -n 500  -s 64  -c 0,1 -p diff_core
+	$(TP) -n 2000 -s 64  -q 8   -c 0,1 -p diff_core_q8
+	$(SC) -m c1 -n 2 -k 300 -s 64  -p fanin
+	$(SC) -m c2 -n 2 -k 300 -s 64  -p pairs
 	@echo "=== passed ==="
 
 # ── Comprehensive sweep ────────────────────────────────────────────────────
+# Section 1 — Ping-Pong Latency
+# Section 2 — Throughput
+# Section 3 — Scalability C1: Fan-in (N producers → 1 consumer)
+# Section 4 — Scalability C2: Parallel pairs (N independent ping-pong pairs)
+
+# Added setup_sysctl dependency here to enforce limits before testing
 run_all: setup_sysctl all | $(RESDIR)
-	@echo "Writing CSV header to $(SYSV_CSV) ..."
-	$(PP) -H > $(SYSV_CSV)
+	@echo "Writing CSV header to $(POSIX_CSV) ..."
+	$(PP) -H > $(POSIX_CSV)
 
 	@echo ""
 	@echo "============================================================"
@@ -82,13 +116,13 @@ run_all: setup_sysctl all | $(RESDIR)
 	@echo "--- same core (cpu 0 → cpu 0) ---"
 	@for s in $(SIZES); do \
 	    printf "  pp same_core  size=%5d B ... " $$s; \
-	    $(PP) -n $(PP_ITERS) -s $$s -c 0,0 -p same_core >> $(SYSV_CSV); \
+	    $(PP) -n $(PP_ITERS) -s $$s -c 0,0 -p same_core >> $(POSIX_CSV); \
 	    echo "done"; \
 	done
 	@echo "--- cross core (cpu 0 → cpu 1) ---"
 	@for s in $(SIZES); do \
 	    printf "  pp diff_core  size=%5d B ... " $$s; \
-	    $(PP) -n $(PP_ITERS) -s $$s -c 0,1 -p diff_core >> $(SYSV_CSV); \
+	    $(PP) -n $(PP_ITERS) -s $$s -c 0,1 -p diff_core >> $(POSIX_CSV); \
 	    echo "done"; \
 	done
 
@@ -99,19 +133,19 @@ run_all: setup_sysctl all | $(RESDIR)
 	@echo "--- queue depth = 1 (fully serialised) ---"
 	@for s in $(SIZES); do \
 	    printf "  tp q1    size=%5d B ... " $$s; \
-	    $(TP) -n $(TP_MSGS) -s $$s -q 1   -c 0,1 -p diff_core_q1   >> $(SYSV_CSV); \
+	    $(TP) -n $(TP_MSGS) -s $$s -q 1   -c 0,1 -p diff_core_q1   >> $(POSIX_CSV); \
 	    echo "done"; \
 	done
 	@echo "--- queue depth = 64 (moderate buffering) ---"
 	@for s in $(SIZES); do \
 	    printf "  tp q64   size=%5d B ... " $$s; \
-	    $(TP) -n $(TP_MSGS) -s $$s -q 64  -c 0,1 -p diff_core_q64  >> $(SYSV_CSV); \
+	    $(TP) -n $(TP_MSGS) -s $$s -q 64  -c 0,1 -p diff_core_q64  >> $(POSIX_CSV); \
 	    echo "done"; \
 	done
-	@echo "--- queue depth = 512 (large buffer / peak BW) ---"
+	@echo "--- queue depth = 512 (large buffer / peak BW; needs msg_max>=512) ---"
 	@for s in $(SIZES); do \
 	    printf "  tp q512  size=%5d B ... " $$s; \
-	    $(TP) -n $(TP_MSGS) -s $$s -q 512 -c 0,1 -p diff_core_q512 >> $(SYSV_CSV); \
+	    $(TP) -n $(TP_MSGS) -s $$s -q 512 -c 0,1 -p diff_core_q512 >> $(POSIX_CSV); \
 	    echo "done"; \
 	done
 
@@ -122,7 +156,7 @@ run_all: setup_sysctl all | $(RESDIR)
 	@for n in 1 2 4 8 16; do \
 	    for s in 64 256 1024; do \
 	        printf "  fanin  n=%2d prods  size=%5d B ... " $$n $$s; \
-	        $(SC) -m c1 -n $$n -k $(SC_K) -s $$s -p fanin >> $(SYSV_CSV); \
+	        $(SC) -m c1 -n $$n -k $(SC_K) -s $$s -p fanin >> $(POSIX_CSV); \
 	        echo "done"; \
 	    done; \
 	done
@@ -134,30 +168,32 @@ run_all: setup_sysctl all | $(RESDIR)
 	@for n in 1 2 4 8; do \
 	    for s in 64 256 1024; do \
 	        printf "  pairs  n=%2d pairs   size=%5d B ... " $$n $$s; \
-	        $(SC) -m c2 -n $$n -k $(SC_K) -s $$s -p pairs >> $(SYSV_CSV); \
+	        $(SC) -m c2 -n $$n -k $(SC_K) -s $$s -p pairs >> $(POSIX_CSV); \
 	        echo "done"; \
 	    done; \
 	done
 
 	@echo ""
 	@echo "============================================================"
-	@echo " Results written to: $(SYSV_CSV)"
-	@echo " Rows: $$(wc -l < $(SYSV_CSV)) (1 header + $$(( $$(wc -l < $(SYSV_CSV)) - 1 )) data)"
+	@echo " Results written to: $(POSIX_CSV)"
+	@echo " Rows: $$(wc -l < $(POSIX_CSV)) (1 header + $$(( $$(wc -l < $(POSIX_CSV)) - 1 )) data)"
 	@echo "============================================================"
 
+# ── Clean ──────────────────────────────────────────────────────────────────
 clean:
 	rm -rf $(BINDIR)
-	@echo "Removing stale System V message queues (if any)..."
-	@for key in $(KEY_FWD) $(KEY_BWD) $(KEY_TPUT) $(KEY_C1) \
-	            $(KEY_C2_FWD) $$(($(KEY_C2_FWD)+1)) $$(($(KEY_C2_FWD)+2)) $$(($(KEY_C2_FWD)+3)) \
-	            $$(($(KEY_C2_FWD)+4)) $$(($(KEY_C2_FWD)+5)) $$(($(KEY_C2_FWD)+6)) $$(($(KEY_C2_FWD)+7)) \
-	            $(KEY_C2_BWD) $$(($(KEY_C2_BWD)+1)) $$(($(KEY_C2_BWD)+2)) $$(($(KEY_C2_BWD)+3)) \
-	            $$(($(KEY_C2_BWD)+4)) $$(($(KEY_C2_BWD)+5)) $$(($(KEY_C2_BWD)+6)) $$(($(KEY_C2_BWD)+7)); do \
-	    id=$$(ipcs -q | awk -v k="$$key" '$$3 == k {print $$2}'); \
-	    if [ -n "$$id" ]; then ipcrm -q $$id && echo "  removed msqid=$$id (key=$$key)"; fi; \
-	done
-	@echo "Done."
-
+	@echo "Removing stale POSIX MQ entries from /dev/mqueue/ ..."
+	@rm -f /dev/mqueue/ipc_pp_fwd \
+	       /dev/mqueue/ipc_pp_bwd \
+	       /dev/mqueue/ipc_throughput \
+	       /dev/mqueue/ipc_scale_c1 2>/dev/null || true [cite: 60, 61]
+	@for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do \
+	    rm -f /dev/mqueue/ipc_scale_c2_fwd_$$i 2>/dev/null || true; \
+	    rm -f /dev/mqueue/ipc_scale_c2_bwd_$$i 2>/dev/null || true; \
+	done [cite: 61, 62, 63]
+	@echo "Clean done."
+	
+	
 # ==============================================================================
 # PERF PROFILING TARGETS
 # ==============================================================================

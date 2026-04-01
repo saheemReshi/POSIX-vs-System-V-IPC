@@ -1,0 +1,30 @@
+--- Diff Core, Size 64, Depth 64 ---
+# started on Thu Apr  2 01:01:47 2026
+
+
+ Performance counter stats for 'system wide':
+
+             1,298      cs                                                                    
+                55      migrations                                                            
+        17,528,951      cache-references                                                      
+         6,566,815      cache-misses                     #   37.46% of all cache refs         
+       633,726,706      cycles                                                                
+       482,277,075      instructions                     #    0.76  insn per cycle            
+
+       0.063958170 seconds time elapsed
+
+--- Diff Core, Size 8192, Depth 64 ---
+# started on Thu Apr  2 01:01:47 2026
+
+
+ Performance counter stats for 'system wide':
+
+            26,303      cs                                                                    
+               114      migrations                                                            
+       154,127,154      cache-references                                                      
+        21,590,748      cache-misses                     #   14.01% of all cache refs         
+     2,115,935,916      cycles                                                                
+     1,443,413,830      instructions                     #    0.68  insn per cycle            
+
+       0.221676836 seconds time elapsed
+

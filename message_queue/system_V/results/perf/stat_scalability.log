@@ -1,0 +1,30 @@
+--- Fan-in, 1 Producers, Size 64 ---
+# started on Thu Apr  2 01:01:27 2026
+
+
+ Performance counter stats for 'system wide':
+
+               169      cs                                                                    
+                23      migrations                                                            
+         1,939,778      cache-references                                                      
+           750,414      cache-misses                     #   38.69% of all cache refs         
+        53,144,108      cycles                                                                
+        34,112,723      instructions                     #    0.64  insn per cycle            
+
+       0.004814459 seconds time elapsed
+
+--- Fan-in, 8 Producers, Size 64 ---
+# started on Thu Apr  2 01:01:27 2026
+
+
+ Performance counter stats for 'system wide':
+
+           259,912      cs                                                                    
+               104      migrations                                                            
+       195,400,728      cache-references                                                      
+        12,674,897      cache-misses                     #    6.49% of all cache refs         
+     4,840,060,657      cycles                                                                
+     2,879,579,881      instructions                     #    0.59  insn per cycle            
+
+       0.137461698 seconds time elapsed
+

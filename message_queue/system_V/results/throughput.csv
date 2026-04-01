@@ -1,4 +1,0 @@
-mq_sysv,throughput,2,8,unspecified,100000,377.1,0.0,0.0,0.0,0.0,2651495,20.229
-mq_sysv,throughput,2,64,unspecified,100000,388.2,0.0,0.0,0.0,0.0,2575686,157.207
-mq_sysv,throughput,2,256,unspecified,100000,346.4,0.0,0.0,0.0,0.0,2886599,704.736
-mq_sysv,throughput,2,1024,unspecified,100000,391.2,0.0,0.0,0.0,0.0,2556062,2496.154

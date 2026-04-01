@@ -1,0 +1,60 @@
+--- Same Core, Size 64 ---
+# started on Thu Apr  2 01:01:45 2026
+
+
+ Performance counter stats for 'system wide':
+
+           102,348      cs                                                                    
+               326      migrations                                                            
+       141,073,438      cache-references                                                      
+        11,013,626      cache-misses                     #    7.81% of all cache refs         
+     1,807,046,084      cycles                                                                
+     1,358,493,290      instructions                     #    0.75  insn per cycle            
+
+       0.357943878 seconds time elapsed
+
+--- Cross Core, Size 64 ---
+# started on Thu Apr  2 01:01:45 2026
+
+
+ Performance counter stats for 'system wide':
+
+           204,401      cs                                                                    
+               303      migrations                                                            
+       253,755,644      cache-references                                                      
+        30,151,243      cache-misses                     #   11.88% of all cache refs         
+     3,983,858,048      cycles                                                                
+     2,810,226,533      instructions                     #    0.71  insn per cycle            
+
+       0.426162875 seconds time elapsed
+
+--- Same Core, Size 8192 ---
+# started on Thu Apr  2 01:01:46 2026
+
+
+ Performance counter stats for 'system wide':
+
+           104,514      cs                                                                    
+               505      migrations                                                            
+       232,584,724      cache-references                                                      
+        23,723,552      cache-misses                     #   10.20% of all cache refs         
+     2,712,227,861      cycles                                                                
+     2,069,942,196      instructions                     #    0.76  insn per cycle            
+
+       0.506386955 seconds time elapsed
+
+--- Cross Core, Size 8192 ---
+# started on Thu Apr  2 01:01:46 2026
+
+
+ Performance counter stats for 'system wide':
+
+           208,103      cs                                                                    
+               267      migrations                                                            
+       420,805,177      cache-references                                                      
+        52,238,069      cache-misses                     #   12.41% of all cache refs         
+     4,993,580,079      cycles                                                                
+     3,628,134,048      instructions                     #    0.73  insn per cycle            
+
+       0.674623718 seconds time elapsed
+
