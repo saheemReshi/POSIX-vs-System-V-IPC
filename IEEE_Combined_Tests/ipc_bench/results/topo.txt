@@ -1,0 +1,23 @@
+Machine topology summary
+Generated: Tue Apr 14 11:52:37 PM IST 2026
+Logical CPUs: 12
+NUMA nodes: 1
+
+Placement pairs selected:
+  same_core    : CPUs 0,6
+  same_socket  : CPUs 0,1
+  cross_socket : CPUs -1,-1
+
+CPU detail:
+  cpu0 → node0 core0
+  cpu1 → node0 core1
+  cpu2 → node0 core2
+  cpu3 → node0 core4
+  cpu4 → node0 core5
+  cpu5 → node0 core6
+  cpu6 → node0 core0
+  cpu7 → node0 core1
+  cpu8 → node0 core2
+  cpu9 → node0 core4
+  cpu10 → node0 core5
+  cpu11 → node0 core6

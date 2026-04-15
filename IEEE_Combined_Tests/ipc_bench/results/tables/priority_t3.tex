@@ -1,0 +1,17 @@
+\begin{table}[!t]
+\centering
+\caption{T3: Per-consumer latency (ns) under N concurrent producers with start barrier, mean $\pm$ std across 30 runs. Each producer uses a distinct priority level (1..N). See stderr PPR values for ordering preservation ratio.}
+\label{tab:priority_t3}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{N producers} & \textbf{Size (B)} & \textbf{p99 ns ($\pm$std)} & \textbf{p99.9 ns ($\pm$std)} \\
+\midrule
+2 & 64 & $75498 \pm 4416$ & $346383 \pm 98119$ \\
+4 & 64 & $484450 \pm 7781$ & $733582 \pm 181591$ \\
+8 & 64 & $1526719 \pm 7009$ & $1594827 \pm 87683$ \\
+2 & 256 & $80972 \pm 5470$ & $274527 \pm 87396$ \\
+4 & 256 & $489245 \pm 5138$ & $677893 \pm 138759$ \\
+8 & 256 & $1594241 \pm 5787$ & $1632277 \pm 50809$ \\
+\bottomrule
+\end{tabular}
+\end{table}

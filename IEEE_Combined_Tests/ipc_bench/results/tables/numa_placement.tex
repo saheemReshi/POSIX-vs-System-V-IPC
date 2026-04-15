@@ -1,0 +1,21 @@
+\begin{table}[!t]
+\centering
+\caption{Effect of NUMA placement on IPC latency, mean $\pm$ std across 30 runs.}
+\label{tab:numa_placement}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Placement} & \textbf{Mechanism} & \textbf{Size (B)} & \textbf{avg (ns)} & \textbf{p50 (ns)} & \textbf{p99 (ns)} & \textbf{p99.9 (ns)} \\
+\midrule
+same_core & mq_posix & 64 & $4499 \pm 42$ & $4453 \pm 49$ & $5523 \pm 85$ & $7284 \pm 464$ \\
+same_core & shm_posix & 64 & $4434 \pm 77$ & $4506 \pm 17$ & $5658 \pm 163$ & $7743 \pm 295$ \\
+same_socket & mq_posix & 64 & $3937 \pm 34$ & $3799 \pm 33$ & $5138 \pm 210$ & $42044 \pm 1571$ \\
+same_socket & shm_posix & 64 & $3979 \pm 40$ & $3951 \pm 11$ & $5031 \pm 76$ & $38334 \pm 4580$ \\
+ &  &  &  &  &  &  \\
+same_core & mq_posix & 1024 & $4772 \pm 103$ & $4737 \pm 110$ & $5861 \pm 134$ & $7472 \pm 163$ \\
+same_core & shm_posix & 1024 & $4463 \pm 76$ & $4516 \pm 16$ & $5735 \pm 566$ & $7640 \pm 356$ \\
+same_socket & mq_posix & 1024 & $4451 \pm 175$ & $4308 \pm 191$ & $5747 \pm 347$ & $55503 \pm 14135$ \\
+same_socket & shm_posix & 1024 & $4044 \pm 29$ & $3990 \pm 9$ & $5116 \pm 289$ & $38425 \pm 3803$ \\
+ &  &  &  &  &  &  \\
+\bottomrule
+\end{tabular}
+\end{table}

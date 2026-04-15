@@ -1,0 +1,17 @@
+\begin{table}[!t]
+\centering
+\caption{Priority T2: HIGH vs LOW p99 latency (ns), mean $\pm$ std across 30 runs. Throttled consumer (1 µs/msg), depth=8 — sustained backpressure.}
+\label{tab:priority_t2}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Placement} & \textbf{Size (B)} & \textbf{LOW p99 ns ($\pm$std)} & \textbf{HIGH p99 ns ($\pm$std)} & \textbf{Speedup} & \textbf{$p$-value} & \textbf{Sig?} \\
+\midrule
+same_core_1024B & 1024 & $911349 \pm 15465$ & $113586 \pm 1460$ & $8.02\times$ & $0.0000$ & \checkmark \\
+same_core_256B & 256 & $906539 \pm 572$ & $112904 \pm 139$ & $8.03\times$ & $0.0000$ & \checkmark \\
+same_core_64B & 64 & $907965 \pm 10721$ & $113064 \pm 1210$ & $8.03\times$ & $0.0000$ & \checkmark \\
+same_socket_1024B & 1024 & $1025572 \pm 2868$ & $217607 \pm 1862$ & $4.71\times$ & $0.0000$ & \checkmark \\
+same_socket_256B & 256 & $1024766 \pm 2234$ & $217442 \pm 2091$ & $4.71\times$ & $0.0000$ & \checkmark \\
+same_socket_64B & 64 & $1025374 \pm 1997$ & $217474 \pm 2222$ & $4.71\times$ & $0.0000$ & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}

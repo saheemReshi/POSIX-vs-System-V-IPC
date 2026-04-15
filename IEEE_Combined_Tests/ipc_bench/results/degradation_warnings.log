@@ -1,0 +1,4 @@
+throughput: depth capped at 128 (requested 512) for msg_size=4096 due to RLIMIT_MSGQUEUE.
+  To fix: echo '* hard msgqueue unlimited' | sudo tee -a /etc/security/limits.conf
+throughput: depth capped at 64 (requested 512) for msg_size=8192 due to RLIMIT_MSGQUEUE.
+  To fix: echo '* hard msgqueue unlimited' | sudo tee -a /etc/security/limits.conf

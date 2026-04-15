@@ -1,0 +1,21 @@
+Ah, your shell (it looks like you are using Zsh) is stubbornly refusing to accept the new limits. This happens because some shells cache their limits, or a background process like tmux or systemd is immediately resetting them.
+
+Let’s bypass your shell entirely. We will launch a temporary, elevated sub-shell that has the limits "baked in." Once you close it, everything disappears.
+
+Here is the foolproof way to run this without touching any system configurations:
+
+1. Open a temporary shell with the injected limits
+Run this command. It will open a new bash session as root, but with the massive limits explicitly forced onto it:
+
+Bash
+sudo prlimit --msgqueue=4300000:4300000 --nofile=65536:65536 bash
+2. Verify the limits (Inside the new shell)
+Your prompt will likely change to root@.... Check that the limits successfully applied:
+
+Bash
+ulimit -q
+ulimit -n
+(You should now see 4300000 and 65536).
+
+3. Clear old queues and run the benchmark
+Since you are now in an environment that guarantees these limits, clean up any crashed queues and run your test:

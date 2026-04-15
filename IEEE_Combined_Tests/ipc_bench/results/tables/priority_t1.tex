@@ -1,0 +1,14 @@
+\begin{table}[!t]
+\centering
+\caption{Priority T1: HIGH vs LOW p99 latency (ns), mean $\pm$ std across 30 runs. Concurrent alternating stream, depth=8.}
+\label{tab:priority_t1}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Placement} & \textbf{Size (B)} & \textbf{LOW p99 ns ($\pm$std)} & \textbf{HIGH p99 ns ($\pm$std)} & \textbf{Speedup} & \textbf{$p$-value} & \textbf{Sig?} \\
+\midrule
+t1_1024B & 1024 & $16039 \pm 4376$ & $7641 \pm 1394$ & $2.10\times$ & $0.0000$ & \checkmark \\
+t1_256B & 256 & $20411 \pm 2184$ & $5778 \pm 1618$ & $3.53\times$ & $0.0000$ & \checkmark \\
+t1_64B & 64 & $20784 \pm 2772$ & $5436 \pm 1301$ & $3.82\times$ & $0.0000$ & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}

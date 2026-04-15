@@ -1,0 +1,22 @@
+\begin{table}[!t]
+\centering
+\caption{VmRSS memory delta (KB) per IPC mechanism. Lower values indicate smaller kernel-internal queue state.}
+\label{tab:memory_footprint}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Mechanism} & \textbf{Benchmark} & \textbf{Mean $\Delta$VmRSS (KB)} & \textbf{Std (KB)} \\
+\midrule
+mq_posix & fanin_n1 & $92.0$ & $0.0$ \\
+mq_posix & fanin_n16 & $92.0$ & $0.0$ \\
+mq_posix & fanin_n2 & $92.0$ & $0.0$ \\
+mq_posix & fanin_n4 & $92.0$ & $0.0$ \\
+mq_posix & fanin_n8 & $92.0$ & $0.0$ \\
+mq_posix & pingpong & $522.0$ & $3.1$ \\
+mq_posix & priority_t3_n2 & $104.0$ & $0.0$ \\
+mq_posix & priority_t3_n4 & $188.0$ & $0.0$ \\
+mq_posix & priority_t3_n8 & $344.0$ & $0.0$ \\
+mq_posix & throughput & $6.0$ & $3.1$ \\
+shm_posix & pingpong & $470.7$ & $4.4$ \\
+\bottomrule
+\end{tabular}
+\end{table}

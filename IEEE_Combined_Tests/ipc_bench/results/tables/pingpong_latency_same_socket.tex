@@ -1,0 +1,24 @@
+\begin{table}[!t]
+\centering
+\caption{Ping-Pong one-way latency (same_socket placement), mean $\pm$ std across 30 runs.}
+\label{tab:pp_latency_same_socket}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Mechanism} & \textbf{Size (B)} & \textbf{p50 (ns)} & \textbf{p95 (ns)} & \textbf{p99 (ns)} & \textbf{p99.9 (ns)} & \textbf{Tput (MB/s)} \\
+\midrule
+mq_posix & 8 & $3779 \pm 28$ & $4293 \pm 186$ & $5143 \pm 336$ & $41984 \pm 4664$ & $1.9 \pm 0.02$ \\
+mq_posix & 64 & $3799 \pm 33$ & $4271 \pm 166$ & $5138 \pm 210$ & $42044 \pm 1571$ & $15.4 \pm 0.13$ \\
+mq_posix & 256 & $3901 \pm 130$ & $4401 \pm 176$ & $5325 \pm 368$ & $41776 \pm 2472$ & $60.2 \pm 1.58$ \\
+mq_posix & 1024 & $4308 \pm 191$ & $4729 \pm 239$ & $5747 \pm 347$ & $55503 \pm 14135$ & $218.2 \pm 8.93$ \\
+mq_posix & 4096 & $5207 \pm 22$ & $5843 \pm 181$ & $7011 \pm 182$ & $72671 \pm 464$ & $718.8 \pm 4.43$ \\
+mq_posix & 8192 & $6149 \pm 18$ & $7104 \pm 212$ & $8315 \pm 268$ & $74072 \pm 450$ & $1211.6 \pm 9.45$ \\
+ &  &  &  &  &  &  \\
+shm_posix & 8 & $3890 \pm 69$ & $4407 \pm 70$ & $5113 \pm 207$ & $39110 \pm 4812$ & $1.9 \pm 0.03$ \\
+shm_posix & 64 & $3951 \pm 11$ & $4403 \pm 35$ & $5031 \pm 76$ & $38334 \pm 4580$ & $15.2 \pm 0.15$ \\
+shm_posix & 256 & $3966 \pm 12$ & $4408 \pm 52$ & $5045 \pm 98$ & $39079 \pm 4536$ & $60.5 \pm 0.45$ \\
+shm_posix & 1024 & $3990 \pm 9$ & $4390 \pm 33$ & $5116 \pm 289$ & $38425 \pm 3803$ & $239.2 \pm 1.73$ \\
+shm_posix & 4096 & $4126 \pm 7$ & $4382 \pm 28$ & $5107 \pm 84$ & $38210 \pm 2409$ & $924.1 \pm 5.99$ \\
+shm_posix & 8192 & $4160 \pm 8$ & $4418 \pm 59$ & $5230 \pm 186$ & $34632 \pm 1820$ & $1814.3 \pm 11.73$ \\
+\bottomrule
+\end{tabular}
+\end{table}
