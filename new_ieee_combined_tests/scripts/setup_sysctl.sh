@@ -16,6 +16,12 @@ SYSV_DIR="${BENCH_SYSV_DIR:-${ROOT_DIR}/stacks/SYSV}"
     exit 1
 }
 
+if ! sudo -n true >/dev/null 2>&1; then
+    echo "[setup_sysctl] warning: sudo credentials unavailable; skipping kernel sysctl setup." >&2
+    echo "[setup_sysctl] run 'sudo -v' and rerun this script to apply system-wide IPC limits." >&2
+    exit 0
+fi
+
 echo "[setup_sysctl] POSIX stack"
 make -C "$POSIX_DIR" setup_sysctl
 

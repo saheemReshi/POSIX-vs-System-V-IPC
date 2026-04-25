@@ -21,10 +21,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <getopt.h>
 #include <fcntl.h>
 #include <mqueue.h>
 #include <sys/wait.h>
 #include <stdint.h>
+#include <errno.h>
 
 #include "../common/timing.h"
 #include "../common/affinity.h"
@@ -65,31 +67,69 @@ static int run_c1(int n, uint32_t k, size_t msz, const char *label, int run_id)
     /* Queue depth: ideally n*k so producers never block, capped at 1024
      * (kernel default msg_max). If your kernel allows more, raise it with:
      *   sudo sysctl fs.mqueue.msg_max=<n*k>                              */
-    long depth = (long)n * k;
-    if (depth > 1024) depth = 1024;
+    long requested_depth = (long)n * k;
+    if (requested_depth > 1024) requested_depth = 1024;
+    long depth = requested_depth;
 
-    struct mq_attr attr = { .mq_maxmsg = depth, .mq_msgsize = (long)msz };
-    mq_unlink(C1_Q);//remove any old queue with same name
+    mq_unlink(C1_Q); /* remove any old queue with same name */
 
     /* Open one write descriptor per producer + one read descriptor for
      * the consumer, all before any fork() so there is no startup race. */
     mqd_t *wq = malloc(n * sizeof(mqd_t));
     if (!wq) { perror("malloc"); return 1; }
 
-    /* First open creates the queue */
-    wq[0] = mq_open(C1_Q, O_CREAT | O_WRONLY, 0600, &attr);
-    if (wq[0] == (mqd_t)-1) {
-        perror("mq_open c1 create");
-        fprintf(stderr, "try: sudo sysctl fs.mqueue.msg_max=%ld "
-                        "fs.mqueue.msgsize_max=%zu\n", depth, msz);
-        free(wq); return 1;
+    /*
+     * Auto-degrade queue depth when mq_open fails due resource limits.
+     * This mirrors throughput.c so low RLIMIT_MSGQUEUE environments still run.
+     */
+    wq[0] = (mqd_t)-1;
+    while (depth >= 1) {
+        struct mq_attr attr = { .mq_maxmsg = depth, .mq_msgsize = (long)msz };
+        mq_unlink(C1_Q);
+        wq[0] = mq_open(C1_Q, O_CREAT | O_WRONLY, 0600, &attr);
+        if (wq[0] != (mqd_t)-1) break;
+
+        if (errno == EACCES || errno == EEXIST) {
+            perror("mq_open c1 create");
+            free(wq);
+            return 1;
+        }
+        if (depth == 1) {
+            perror("mq_open c1 create depth=1");
+            fprintf(stderr,
+                "scalability c1: cannot create queue at depth=1 for msg_size=%zu.\n"
+                "  Check: ulimit -q, fs.mqueue.msgsize_max, and fs.mqueue.msg_max\n",
+                msz);
+            free(wq);
+            return 1;
+        }
+        depth /= 2;
     }
+    if (depth != requested_depth) {
+        fprintf(stderr,
+            "scalability c1: depth capped at %ld (requested %ld) for msg_size=%zu "
+            "due to resource limits.\n",
+            depth, requested_depth, msz);
+    }
+
     for (int i = 1; i < n; i++) {
         wq[i] = mq_open(C1_Q, O_WRONLY);
-        if (wq[i] == (mqd_t)-1) { perror("mq_open c1 wq"); free(wq); return 1; }
+        if (wq[i] == (mqd_t)-1) {
+            perror("mq_open c1 wq");
+            for (int j = 0; j < i; j++) mq_close(wq[j]);
+            mq_unlink(C1_Q);
+            free(wq);
+            return 1;
+        }
     }
     mqd_t rq = mq_open(C1_Q, O_RDONLY);
-    if (rq == (mqd_t)-1) { perror("mq_open c1 rq"); free(wq); return 1; }
+    if (rq == (mqd_t)-1) {
+        perror("mq_open c1 rq");
+        for (int j = 0; j < n; j++) mq_close(wq[j]);
+        mq_unlink(C1_Q);
+        free(wq);
+        return 1;
+    }
 
     /* Start timing before forks so we capture all producer work */
     uint64_t t0 = now_ns();

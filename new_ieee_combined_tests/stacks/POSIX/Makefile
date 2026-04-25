@@ -99,19 +99,46 @@ $(PRIO): priority/priority_test.c common/timing.h common/affinity.h common/stats
 $(ALL_BINS): common/timing.h common/affinity.h common/stats.h
 
 # ── Kernel limit setup ────────────────────────────────────────────────────────
+# setup_sysctl:
+# 	@echo "Current MQ limits:"
+# 	@sysctl fs.mqueue.msg_max fs.mqueue.msgsize_max
+# 	sudo sysctl -w fs.mqueue.msg_max=1024
+# 	sudo sysctl -w fs.mqueue.msgsize_max=8192
+# 	@echo "MQ limits raised. Reverts on reboot."
+# 	@echo "To make permanent: add to /etc/sysctl.conf"
+# 	@echo ""
+# 	@echo "Attempting RLIMIT_MSGQUEUE raise for depth=512 large msgs..."
+# 	-prlimit --msgqueue=4300000:4300000 --pid $$$$ 2>/dev/null && \
+# 	    echo "  prlimit OK: RLIMIT_MSGQUEUE = 4300000 bytes" || \
+# 	    echo "  prlimit not available — throughput.c will auto-degrade depth"
 setup_sysctl:
 	@echo "Current MQ limits:"
 	@sysctl fs.mqueue.msg_max fs.mqueue.msgsize_max
-	sudo sysctl -w fs.mqueue.msg_max=1024
-	sudo sysctl -w fs.mqueue.msgsize_max=8192
-	@echo "MQ limits raised. Reverts on reboot."
-	@echo "To make permanent: add to /etc/sysctl.conf"
-	@echo ""
-	@echo "Attempting RLIMIT_MSGQUEUE raise for depth=512 large msgs..."
-	-prlimit --msgqueue=4300000:4300000 --pid $$$$ 2>/dev/null && \
-	    echo "  prlimit OK: RLIMIT_MSGQUEUE = 4300000 bytes" || \
-	    echo "  prlimit not available — throughput.c will auto-degrade depth"
 
+	@echo "Raising POSIX MQ sysctl limits..."
+	sudo sysctl -w fs.mqueue.msg_max=4096
+	sudo sysctl -w fs.mqueue.msgsize_max=8192
+
+	@echo "New MQ limits:"
+	@sysctl fs.mqueue.msg_max fs.mqueue.msgsize_max
+
+	@echo ""
+	@echo "Raising RLIMIT_MSGQUEUE (total bytes per process)..."
+	@if command -v prlimit >/dev/null 2>&1; then \
+		if sudo -n prlimit --pid $$$$ --msgqueue=67108864:67108864 >/dev/null 2>&1; then \
+			echo "  RLIMIT_MSGQUEUE set to 64 MB"; \
+		else \
+			echo "  WARNING: could not raise RLIMIT_MSGQUEUE (run 'sudo -v' first)"; \
+			echo "           throughput may auto-degrade depth"; \
+		fi \
+	else \
+		echo "  WARNING: prlimit not available — throughput will auto-degrade depth"; \
+	fi
+
+	@echo ""
+	@echo "Note: limits revert after reboot."
+	@echo "To make permanent, edit /etc/security/limits.conf"
+	
 setup_perf:
 	@echo "Lifting perf_event_paranoid..."
 	sudo sysctl -w kernel.perf_event_paranoid=-1

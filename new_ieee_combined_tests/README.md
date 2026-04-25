@@ -76,7 +76,7 @@ Run these commands exactly from the benchmark root:
 cd /home/saheem/Desktop/iiitb/imt2023_sem6/linux_ipc_pe/posix_vs_sysv/new_ieee_combined_tests
 ```
 
-1. Apply kernel IPC limits (required for MQ scalability/throughput):
+1. Apply kernel IPC limits (required for MQ scalability/throughput, will also happen by default when run_suite.sh is run):
 
 ```bash
 bash scripts/setup_sysctl.sh

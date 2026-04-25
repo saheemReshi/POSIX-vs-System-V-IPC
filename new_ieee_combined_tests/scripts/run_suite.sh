@@ -105,6 +105,11 @@ mkdir -p "${ROOT_DIR}/results/raw/posix" \
          "${ROOT_DIR}/results/raw/combined" \
          "${ROOT_DIR}/results/logs"
 
+SUDO_NONINTERACTIVE_OK=0
+if sudo -n true >/dev/null 2>&1; then
+    SUDO_NONINTERACTIVE_OK=1
+fi
+
 if [[ "$DO_SETUP_SYSCTL" -eq 1 ]]; then
     echo "Applying kernel IPC limits (setup_sysctl)..."
     bash "${ROOT_DIR}/scripts/setup_sysctl.sh"
@@ -114,6 +119,61 @@ if [[ "$DO_SETUP_PERF" -eq 1 ]]; then
     echo "Applying perf limits (setup_perf)..."
     bash "${ROOT_DIR}/scripts/setup_perf.sh"
 fi
+
+TARGET_NOFILE="${BENCH_NOFILE_LIMIT:-65536}"
+TARGET_MSGQUEUE_BYTES="${BENCH_MSGQUEUE_LIMIT:-67108864}"
+
+echo "Setting open file descriptor limit to ${TARGET_NOFILE}..."
+if ! ulimit -n "$TARGET_NOFILE" 2>/dev/null; then
+    if command -v prlimit >/dev/null 2>&1 && [[ "$SUDO_NONINTERACTIVE_OK" -eq 1 ]]; then
+        if sudo -n prlimit --pid $$ --nofile="${TARGET_NOFILE}:${TARGET_NOFILE}" >/dev/null 2>&1 \
+           && ulimit -n "$TARGET_NOFILE" 2>/dev/null; then
+            echo "Raised RLIMIT_NOFILE via sudo prlimit."
+        else
+            echo "Warning: could not set file descriptor limit to ${TARGET_NOFILE} (current: $(ulimit -n))." >&2
+        fi
+    else
+        echo "Warning: could not set file descriptor limit to ${TARGET_NOFILE} (current: $(ulimit -n))." >&2
+    fi
+fi
+
+echo "Setting POSIX message-queue byte limit to ${TARGET_MSGQUEUE_BYTES}..."
+if ! ulimit -q "$TARGET_MSGQUEUE_BYTES" 2>/dev/null; then
+    if command -v prlimit >/dev/null 2>&1 && [[ "$SUDO_NONINTERACTIVE_OK" -eq 1 ]]; then
+        if sudo -n prlimit --pid $$ --msgqueue="${TARGET_MSGQUEUE_BYTES}:${TARGET_MSGQUEUE_BYTES}" >/dev/null 2>&1 \
+           && ulimit -q "$TARGET_MSGQUEUE_BYTES" 2>/dev/null; then
+            echo "Raised RLIMIT_MSGQUEUE via sudo prlimit."
+        else
+            echo "Warning: could not set RLIMIT_MSGQUEUE to ${TARGET_MSGQUEUE_BYTES} (current: $(ulimit -q))." >&2
+        fi
+    else
+        echo "Warning: could not set RLIMIT_MSGQUEUE to ${TARGET_MSGQUEUE_BYTES} (current: $(ulimit -q))." >&2
+    fi
+fi
+
+echo "Effective limits: nofile=$(ulimit -n), msgqueue=$(ulimit -q)"
+
+echo "Setting CPU governor to performance (avoid freq scaling)..."
+
+if [ -d "/sys/devices/system/cpu/cpu0/cpufreq" ]; then
+    if [[ "$SUDO_NONINTERACTIVE_OK" -eq 1 ]]; then
+        if echo performance | sudo -n tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null; then
+            echo "CPU governor set to performance."
+        else
+            echo "Warning: failed to set CPU governor to performance." >&2
+        fi
+    else
+        echo "Warning: sudo credentials unavailable; skipping CPU governor setup." >&2
+        echo "         Run 'sudo -v' before this script if you want governor control." >&2
+    fi
+
+    # Verify (important)
+    gov=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null || echo "unknown")
+    echo "Current governor: $gov"
+else
+    echo "WARNING: cpufreq interface not found. Skipping CPU governor setup." >&2
+fi
+
 
 eval "$("${ROOT_DIR}/scripts/detect_cpu_pairs.sh" --export)"
 

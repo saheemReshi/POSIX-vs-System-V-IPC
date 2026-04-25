@@ -16,6 +16,12 @@ SYSV_DIR="${BENCH_SYSV_DIR:-${ROOT_DIR}/stacks/SYSV}"
     exit 1
 }
 
+if ! sudo -n true >/dev/null 2>&1; then
+    echo "[setup_perf] warning: sudo credentials unavailable; skipping perf sysctl setup." >&2
+    echo "[setup_perf] run 'sudo -v' and rerun this script to apply perf limits." >&2
+    exit 0
+fi
+
 echo "[setup_perf] POSIX stack"
 make -C "$POSIX_DIR" setup_perf
 
