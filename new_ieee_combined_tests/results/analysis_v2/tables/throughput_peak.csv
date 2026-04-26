@@ -1,0 +1,13 @@
+mechanism,placement_group,queue_depth,peak_throughput_MB_s,peak_msg_size_bytes
+mq_posix,cross_core,1.0,5328.864,8192
+mq_posix,cross_core,64.0,9348.371,8192
+mq_posix,cross_core,512.0,10188.935,8192
+mq_posix,same_core,1.0,4378.674,8192
+mq_posix,same_core,64.0,9480.352,8192
+mq_posix,same_core,512.0,8182.514,8192
+mq_sysv,cross_core,1.0,5185.189,8192
+mq_sysv,cross_core,64.0,9843.078,8192
+mq_sysv,cross_core,512.0,10778.455,8192
+mq_sysv,same_core,1.0,3472.296,8192
+mq_sysv,same_core,64.0,8884.671,8192
+mq_sysv,same_core,512.0,7535.168,8192

@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: setup-sysctl setup-perf run run-posix run-sysv quick analyze all clean
+.PHONY: setup-sysctl setup-perf run run-posix run-sysv quick analyze perf strace all clean
 
 setup-sysctl:
 	bash scripts/setup_sysctl.sh
@@ -22,6 +22,12 @@ quick:
 
 analyze:
 	python3 scripts/analyze.py
+
+perf:
+	bash scripts/run_perf.sh --stack both
+
+strace:
+	bash scripts/run_strace.sh --stack both
 
 all: run analyze
 
