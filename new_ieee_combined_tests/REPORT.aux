@@ -1,0 +1,221 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\citation{stevens1999}
+\citation{linux_sysvipc}
+\citation{linux_mq_overview}
+\citation{linux_futex}
+\citation{drepper2011futexes}
+\citation{amd_zen_arch}
+\citation{amd_infinity_fabric}
+\@writefile{toc}{\contentsline {paragraph}{Research questions.}{2}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Contributions.}{2}{section*.2}\protected@file@percent }
+\citation{posix2017}
+\citation{linux_mq_overview}
+\citation{stevens1999}
+\citation{linux_sysvipc}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background and Related Work}{3}{section.2}\protected@file@percent }
+\newlabel{sec:bg}{{2}{3}{Background and Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}POSIX IPC}{3}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}System V IPC}{3}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}API differences worth highlighting}{3}{subsection.2.3}\protected@file@percent }
+\citation{linux_mq_overview}
+\citation{linux_sysvipc}
+\citation{drepper2011futexes}
+\citation{linux_futex}
+\citation{amd_zen_arch}
+\citation{amd_infinity_fabric}
+\citation{mcvoy1996lmbench}
+\citation{stevens1999}
+\citation{linux_mq_overview}
+\citation{linux_sysvipc}
+\citation{linux_futex}
+\citation{drepper2011futexes}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Linux kernel implementation notes}{4}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}AMD CCX topology and cross-CCX latency}{4}{subsection.2.5}\protected@file@percent }
+\newlabel{sec:bg:ccx}{{2.5}{4}{AMD CCX topology and cross-CCX latency}{subsection.2.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Related work}{4}{subsection.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Methodology}{5}{section.3}\protected@file@percent }
+\newlabel{sec:method}{{3}{5}{Methodology}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}System under test}{5}{subsection.3.1}\protected@file@percent }
+\newlabel{sec:method:sut}{{3.1}{5}{System under test}{subsection.3.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces System under test (extracted from \texttt  {results/logs/topology.txt}; full file in Appendix~\ref {app:topology}).}}{5}{table.caption.3}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:topology}{{1}{5}{System under test (extracted from \texttt {results/logs/topology.txt}; full file in Appendix~\ref {app:topology})}{table.caption.3}{}}
+\citation{linux_setaffinity}
+\citation{linux_clock}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Benchmark suite}{6}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:method:suite}{{3.2}{6}{Benchmark suite}{subsection.3.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Benchmark matrix.}}{6}{table.caption.4}\protected@file@percent }
+\newlabel{tab:matrix}{{2}{6}{Benchmark matrix}{table.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Run hygiene}{6}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:method:hygiene}{{3.3}{6}{Run hygiene}{subsection.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Statistical methods}{6}{subsection.3.4}\protected@file@percent }
+\newlabel{sec:method:stats}{{3.4}{6}{Statistical methods}{subsection.3.4}{}}
+\citation{mannwhitney1947}
+\citation{welch1947}
+\citation{cliff1993}
+\citation{efron1979bootstrap}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{7}{section.4}\protected@file@percent }
+\newlabel{sec:results}{{4}{7}{Results}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Coverage and reproducibility}{7}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Common-case latency: ping-pong p50}{7}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:results:p50}{{4.2}{7}{Common-case latency: ping-pong p50}{subsection.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces MQ ping-pong common-case (p50) latency. Ratio of System~V to POSIX median; values above 1.0 mean POSIX is faster. POSIX wins consistently by $1$--$3\,\%$, with the smallest gap at \texttt  {diff\_l3} where the ratio approaches unity at large message sizes.}}{8}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:pp_p50}{{1}{8}{MQ ping-pong common-case (p50) latency. Ratio of System~V to POSIX median; values above 1.0 mean POSIX is faster. POSIX wins consistently by $1$--$3\,\%$, with the smallest gap at \texttt {diff\_l3} where the ratio approaches unity at large message sizes}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Tail latency: the cross-CCX anomaly}{8}{subsection.4.3}\protected@file@percent }
+\newlabel{sec:results:tail}{{4.3}{8}{Tail latency: the cross-CCX anomaly}{subsection.4.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces MQ ping-pong latency progression p50 $\rightarrow $ p99.9 for each (placement, size) cell. Note the dramatic vertical detachment of the POSIX line from the System~V line in the bottom row (\texttt  {diff\_l3}) at p99 and p99.9.}}{9}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:tail_grid}{{2}{9}{MQ ping-pong latency progression p50 $\rightarrow $ p99.9 for each (placement, size) cell. Note the dramatic vertical detachment of the POSIX line from the System~V line in the bottom row (\texttt {diff\_l3}) at p99 and p99.9}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Throughput sweep}{9}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:results:throughput}{{4.4}{9}{Throughput sweep}{subsection.4.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces MQ throughput vs.\ message size, separate line per queue depth, one panel per placement.}}{10}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:tp}{{3}{10}{MQ throughput vs.\ message size, separate line per queue depth, one panel per placement}{figure.caption.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces MQ throughput ratio sysv/posix vs.\ message size, separate line per queue depth, one panel per placement. The red dashed line at 1.0 is the equality reference: below means POSIX is faster, above means System~V is faster.}}{10}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:tp_ratio}{{4}{10}{MQ throughput ratio sysv/posix vs.\ message size, separate line per queue depth, one panel per placement. The red dashed line at 1.0 is the equality reference: below means POSIX is faster, above means System~V is faster}{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Fan-in scalability}{11}{subsection.4.5}\protected@file@percent }
+\newlabel{sec:results:fanin}{{4.5}{11}{Fan-in scalability}{subsection.4.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces MQ fan-in scalability: throughput vs.\ producer count $N$, for three message sizes. POSIX (blue) sustains throughput across the full $N$ range; System~V (red) collapses sharply.}}{11}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:fanin}{{5}{11}{MQ fan-in scalability: throughput vs.\ producer count $N$, for three message sizes. POSIX (blue) sustains throughput across the full $N$ range; System~V (red) collapses sharply}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Parallel-pairs scalability}{11}{subsection.4.6}\protected@file@percent }
+\newlabel{sec:results:pairs}{{4.6}{11}{Parallel-pairs scalability}{subsection.4.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces MQ parallel-pairs p99 latency vs.\ $N$ (number of independent pairs), one panel per message size. POSIX and System~V track closely through $N=4$; both rise sharply at $N=8$ where the test machine has exhausted its uncontended cores.}}{12}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:pairs}{{6}{12}{MQ parallel-pairs p99 latency vs.\ $N$ (number of independent pairs), one panel per message size. POSIX and System~V track closely through $N=4$; both rise sharply at $N=8$ where the test machine has exhausted its uncontended cores}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}Shared-memory comparison}{12}{subsection.4.7}\protected@file@percent }
+\newlabel{sec:results:shm}{{4.7}{12}{Shared-memory comparison}{subsection.4.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces SHM ping-pong p50 ratio sysv/posix. Essentially a tie across placements and sizes; the slight upward step at 8192\,B / same\_core is discussed in the text.}}{12}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:shm_pp}{{7}{12}{SHM ping-pong p50 ratio sysv/posix. Essentially a tie across placements and sizes; the slight upward step at 8192\,B / same\_core is discussed in the text}{figure.caption.11}{}}
+\citation{linux_sysvipc}
+\citation{drepper2011futexes}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces SHM throughput ratio sysv/posix, lines per queue depth. At $q=1$ the two are tied; at $q\geq 8$ POSIX is $1.7$--$2.5\times $ faster.}}{13}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:shm_tp}{{8}{13}{SHM throughput ratio sysv/posix, lines per queue depth. At $q=1$ the two are tied; at $q\geq 8$ POSIX is $1.7$--$2.5\times $ faster}{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Hardware-Counter and Syscall Analysis}{13}{section.5}\protected@file@percent }
+\newlabel{sec:perf}{{5}{13}{Hardware-Counter and Syscall Analysis}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Methodology}{13}{subsection.5.1}\protected@file@percent }
+\newlabel{sec:perf:method}{{5.1}{13}{Methodology}{subsection.5.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Placement-label caveat.}{14}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{AMD iTLB caveat.}{14}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Per-benchmark hardware counters}{14}{subsection.5.2}\protected@file@percent }
+\newlabel{sec:perf:counters}{{5.2}{14}{Per-benchmark hardware counters}{subsection.5.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Per-benchmark hardware counters, averaged across all cells of each (stack, benchmark family). Mean cycles is the per-run cycle count across the cells in that family; lower means less work for the same output. The fan-in row is the \emph  {headline}: System~V uses $5.3\times $ more cycles than POSIX at the same producer count.}}{14}{table.caption.15}\protected@file@percent }
+\newlabel{tab:perf_main}{{3}{14}{Per-benchmark hardware counters, averaged across all cells of each (stack, benchmark family). Mean cycles is the per-run cycle count across the cells in that family; lower means less work for the same output. The fan-in row is the \emph {headline}: System~V uses $5.3\times $ more cycles than POSIX at the same producer count}{table.caption.15}{}}
+\@writefile{toc}{\contentsline {paragraph}{1. The fan-in cycle ratio mirrors the throughput ratio.}{15}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{2. SHM throughput cycles match the timing advantage.}{15}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{3. IPC is roughly equivalent across stacks.}{15}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Kernel hot-function comparison: fan-in collapse}{15}{subsection.5.3}\protected@file@percent }
+\newlabel{sec:perf:hotfn}{{5.3}{15}{Kernel hot-function comparison: fan-in collapse}{subsection.5.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Top kernel symbols in fan-in $N=16$ at 64\,B (cycles event, \texttt  {perf record -F 999 -g}). Percentages are fraction of total samples. The single function \texttt  {native\_queued\_spin\_lock\_slowpath} takes 12.80\,\% of all SysV cycles vs.\ 5.83\,\% in POSIX.}}{16}{table.caption.19}\protected@file@percent }
+\newlabel{tab:fanin_hotfn}{{4}{16}{Top kernel symbols in fan-in $N=16$ at 64\,B (cycles event, \texttt {perf record -F 999 -g}). Percentages are fraction of total samples. The single function \texttt {native\_queued\_spin\_lock\_slowpath} takes 12.80\,\% of all SysV cycles vs.\ 5.83\,\% in POSIX}{table.caption.19}{}}
+\@writefile{toc}{\contentsline {paragraph}{Reading \texttt  {native\_queued\_spin\_lock\_slowpath}.}{16}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Which lock is contended?}{16}{section*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mitigation overhead is non-trivial.}{16}{section*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Kernel paths for ping-pong and throughput}{17}{subsection.5.4}\protected@file@percent }
+\newlabel{sec:perf:other_hotfn}{{5.4}{17}{Kernel paths for ping-pong and throughput}{subsection.5.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Top kernel symbols in cross-CCX ping-pong (\texttt  {diff\_l3}, 64\,B). Both stacks spend the bulk of cycles in the scheduler core (\texttt  {dequeue\_entity}, \texttt  {psi\_task\_switch}, \texttt  {\_\_schedule}); IPC-level differences are not visible at this granularity, consistent with the cross-CCX p99.9 anomaly being a microsecond-scale tail event rather than a steady-state imbalance.}}{17}{table.caption.23}\protected@file@percent }
+\newlabel{tab:tp_hotfn_pp}{{5}{17}{Top kernel symbols in cross-CCX ping-pong (\texttt {diff\_l3}, 64\,B). Both stacks spend the bulk of cycles in the scheduler core (\texttt {dequeue\_entity}, \texttt {psi\_task\_switch}, \texttt {\_\_schedule}); IPC-level differences are not visible at this granularity, consistent with the cross-CCX p99.9 anomaly being a microsecond-scale tail event rather than a steady-state imbalance}{table.caption.23}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Top kernel symbols in same-core throughput at $q=8$, 64\,B. The two stacks execute different IPC kernel functions (\texttt  {do\_mq\_timedreceive} for POSIX vs.\ \texttt  {do\_msgrcv} for SysV) but at similar rates of total cycles (POSIX $1.74\times 10^9$, SysV $1.79\times 10^9$).}}{17}{table.caption.24}\protected@file@percent }
+\newlabel{tab:tp_hotfn_tp}{{6}{17}{Top kernel symbols in same-core throughput at $q=8$, 64\,B. The two stacks execute different IPC kernel functions (\texttt {do\_mq\_timedreceive} for POSIX vs.\ \texttt {do\_msgrcv} for SysV) but at similar rates of total cycles (POSIX $1.74\times 10^9$, SysV $1.79\times 10^9$)}{table.caption.24}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Syscall mix}{18}{subsection.5.5}\protected@file@percent }
+\newlabel{sec:perf:strace}{{5.5}{18}{Syscall mix}{subsection.5.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Syscall mix for 64\,B \texttt  {same\_core} ping-pong (one representative run, parsed from \texttt  {strace -c}).}}{18}{table.caption.25}\protected@file@percent }
+\newlabel{tab:strace}{{7}{18}{Syscall mix for 64\,B \texttt {same\_core} ping-pong (one representative run, parsed from \texttt {strace -c})}{table.caption.25}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Summary of the perf evidence}{18}{subsection.5.6}\protected@file@percent }
+\newlabel{sec:perf:summary}{{5.6}{18}{Summary of the perf evidence}{subsection.5.6}{}}
+\citation{linux_mq_overview}
+\citation{linux_futex}
+\citation{drepper2011futexes}
+\citation{linux_sysvipc}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{19}{section.6}\protected@file@percent }
+\newlabel{sec:discussion}{{6}{19}{Discussion}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Why POSIX MQ scales under fan-in while System~V collapses}{19}{subsection.6.1}\protected@file@percent }
+\newlabel{sec:disc:fanin}{{6.1}{19}{Why POSIX MQ scales under fan-in while System~V collapses}{subsection.6.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}The cross-CCX p99.9 anomaly}{19}{subsection.6.2}\protected@file@percent }
+\newlabel{sec:disc:ccx}{{6.2}{19}{The cross-CCX p99.9 anomaly}{subsection.6.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Why POSIX SHM is faster at moderate batching}{19}{subsection.6.3}\protected@file@percent }
+\newlabel{sec:disc:shm}{{6.3}{19}{Why POSIX SHM is faster at moderate batching}{subsection.6.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}What we did not measure}{20}{subsection.6.4}\protected@file@percent }
+\newlabel{sec:disc:not_measured}{{6.4}{20}{What we did not measure}{subsection.6.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Bridging from mechanism to recommendation}{20}{subsection.6.5}\protected@file@percent }
+\newlabel{sec:disc:bridge}{{6.5}{20}{Bridging from mechanism to recommendation}{subsection.6.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Developer Guidance: Choosing Between POSIX and System~V}{20}{section.7}\protected@file@percent }
+\newlabel{sec:guidance}{{7}{20}{Developer Guidance: Choosing Between POSIX and System~V}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Capability comparison at a glance}{21}{subsection.7.1}\protected@file@percent }
+\newlabel{sec:guidance:cap}{{7.1}{21}{Capability comparison at a glance}{subsection.7.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Capability comparison. Rows are features; cells indicate whether each family provides the feature directly, indirectly, or not at all.}}{21}{table.caption.26}\protected@file@percent }
+\newlabel{tab:capability}{{8}{21}{Capability comparison. Rows are features; cells indicate whether each family provides the feature directly, indirectly, or not at all}{table.caption.26}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Performance summary at a glance}{21}{subsection.7.2}\protected@file@percent }
+\newlabel{sec:guidance:perf}{{7.2}{21}{Performance summary at a glance}{subsection.7.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Performance summary. Confidence is High where $p<10^{-7}$ with Cliff's $\delta \geq 0.8$; Medium for $p<10^{-3}$ with $|\delta |\geq 0.3$; Low otherwise. Magnitude is the multiplicative ratio of the winner over the loser.}}{22}{table.caption.27}\protected@file@percent }
+\newlabel{tab:perf_summary}{{9}{22}{Performance summary. Confidence is High where $p<10^{-7}$ with Cliff's $\delta \geq 0.8$; Medium for $p<10^{-3}$ with $|\delta |\geq 0.3$; Low otherwise. Magnitude is the multiplicative ratio of the winner over the loser}{table.caption.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Use-case archetypes}{22}{subsection.7.3}\protected@file@percent }
+\newlabel{sec:guidance:usecase}{{7.3}{22}{Use-case archetypes}{subsection.7.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{1. High-throughput logging or telemetry pipeline.}{22}{section*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{2. Database commit-log shipper.}{22}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{3. Real-time control on multi-CCD AMD with strict tail budgets.}{22}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{4. Banking-style multi-resource locking.}{23}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{5. Web server with type-routed worker pool.}{23}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6. High-rate small-message ring buffer.}{23}{section*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{7. Mostly-idle inter-process notification.}{23}{section*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{8. Reader-writer locks across processes.}{23}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{9. IPC inside an event-driven server (epoll-based).}{23}{section*.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{10. Legacy-system interoperability.}{24}{section*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Recommendations by developer role and field}{24}{subsection.7.4}\protected@file@percent }
+\newlabel{sec:guidance:role}{{7.4}{24}{Recommendations by developer role and field}{subsection.7.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Database, storage, and queueing-system engineers.}{24}{section*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Real-time, safety-critical, and embedded engineers.}{24}{section*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Game-engine and entertainment-systems developers.}{24}{section*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Web backend and microservice engineers.}{24}{section*.41}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Systems, kernel, and OS engineers.}{24}{section*.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Application developers (general-purpose).}{24}{section*.43}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Security-critical and high-assurance developers.}{24}{section*.44}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Common pitfalls}{25}{subsection.7.5}\protected@file@percent }
+\newlabel{sec:guidance:pitfalls}{{7.5}{25}{Common pitfalls}{subsection.7.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Pitfall 1: ``Always pick the newer one''.}{25}{section*.45}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pitfall 2: ``Always pick System V because it's older and more powerful''.}{25}{section*.46}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pitfall 3: ``POSIX MQ is fine for low-jitter cross-CCX''.}{25}{section*.47}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pitfall 4: ``Shared memory is always faster than message queues''.}{25}{section*.48}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pitfall 5: ``System V \texttt  {semop} is just slow''.}{25}{section*.49}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pitfall 6: Forgetting to clean up SysV resources.}{25}{section*.50}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pitfall 7: Cross-stack assumptions about cleanup.}{25}{section*.51}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}Decision flow}{25}{subsection.7.6}\protected@file@percent }
+\newlabel{sec:guidance:flow}{{7.6}{25}{Decision flow}{subsection.7.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Threats to Validity}{26}{section.8}\protected@file@percent }
+\newlabel{sec:threats}{{8}{26}{Threats to Validity}{section.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Internal validity}{26}{subsection.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}External validity}{27}{subsection.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Construct validity}{27}{subsection.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Conclusion validity}{27}{subsection.8.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Future Work}{27}{section.9}\protected@file@percent }
+\newlabel{sec:future}{{9}{27}{Future Work}{section.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{28}{section.10}\protected@file@percent }
+\newlabel{sec:conclusion}{{10}{28}{Conclusion}{section.10}{}}
+\bibstyle{plain}
+\bibdata{references}
+\bibcite{amd_zen_arch}{1}
+\bibcite{amd_infinity_fabric}{2}
+\bibcite{cliff1993}{3}
+\bibcite{drepper2011futexes}{4}
+\bibcite{efron1979bootstrap}{5}
+\bibcite{posix2017}{6}
+\bibcite{linux_clock}{7}
+\bibcite{linux_futex}{8}
+\@writefile{toc}{\contentsline {paragraph}{Future work in brief.}{29}{section*.52}\protected@file@percent }
+\bibcite{linux_mq_overview}{9}
+\bibcite{linux_setaffinity}{10}
+\bibcite{linux_sysvipc}{11}
+\bibcite{mannwhitney1947}{12}
+\bibcite{mcvoy1996lmbench}{13}
+\bibcite{stevens1999}{14}
+\bibcite{welch1947}{15}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Full system topology}{30}{appendix.A}\protected@file@percent }
+\newlabel{app:topology}{{A}{30}{Full system topology}{appendix.A}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Master comparison table (selected rows)}{31}{appendix.B}\protected@file@percent }
+\newlabel{app:master}{{B}{31}{Master comparison table (selected rows)}{appendix.B}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Selected headline rows from \texttt  {master\_comparison.csv}. Ratio is sysv/posix; values $<1$ favour SysV when the metric is latency, and favour POSIX when the metric is throughput.}}{32}{table.caption.54}\protected@file@percent }
+\newlabel{tab:master}{{10}{32}{Selected headline rows from \texttt {master\_comparison.csv}. Ratio is sysv/posix; values $<1$ favour SysV when the metric is latency, and favour POSIX when the metric is throughput}{table.caption.54}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}Reproducibility}{32}{appendix.C}\protected@file@percent }
+\newlabel{app:repro}{{C}{32}{Reproducibility}{appendix.C}{}}
+\gdef \@abspage@last{32}

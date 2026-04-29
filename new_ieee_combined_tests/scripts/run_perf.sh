@@ -187,7 +187,7 @@ else
 fi
 
 # ── perf events ──────────────────────────────────────────────────────
-PERF_EVENTS="task-clock,cycles,instructions,cache-references,cache-misses,minor-faults,major-faults,context-switches,cpu-migrations"
+PERF_EVENTS="task-clock,cycles,instructions,cache-references,cache-misses,dTLB-loads,dTLB-load-misses,iTLB-loads,iTLB-load-misses,branch-instructions,branch-misses,minor-faults,major-faults,context-switches,cpu-migrations"
 
 # ── CPU topology ─────────────────────────────────────────────────────
 eval "$("${ROOT_DIR}/scripts/detect_cpu_pairs.sh" --export)"
@@ -295,7 +295,7 @@ run_stack_perf() {
     fi
 
     # Validate binaries
-    for b in pingpong throughput scalability shm_pingpong; do
+    for b in pingpong throughput scalability shm_pingpong shm_throughput shm_pairs; do
         [[ -x "${bindir}/${b}" ]] || {
             echo "Missing binary: ${bindir}/${b}" >&2
             echo "Check build logs at ${log}" >&2
@@ -308,8 +308,8 @@ run_stack_perf() {
     echo "[${stack}] Collecting perf-stat counters"
     echo "============================================================"
 
-    # ── [1/5] MQ ping-pong latency ──────────────────────────────────
-    echo "[1/5] MQ ping-pong latency"
+    # ── [1/7] MQ ping-pong latency ──────────────────────────────────
+    echo "[1/7] MQ ping-pong latency"
     for i in "${!PLACE_LABELS[@]}"; do
         label="${PLACE_LABELS[$i]}"
         cpus="${PLACE_CPUS[$i]}"
@@ -321,8 +321,8 @@ run_stack_perf() {
         done
     done
 
-    # ── [2/5] MQ throughput ──────────────────────────────────────────
-    echo "[2/5] MQ throughput"
+    # ── [2/7] MQ throughput ──────────────────────────────────────────
+    echo "[2/7] MQ throughput"
     for i in "${!PLACE_LABELS[@]}"; do
         label="${PLACE_LABELS[$i]}"
         cpus="${PLACE_CPUS[$i]}"
@@ -336,8 +336,8 @@ run_stack_perf() {
         done
     done
 
-    # ── [3/5] MQ scalability fan-in ──────────────────────────────────
-    echo "[3/5] MQ scalability fan-in"
+    # ── [3/7] MQ scalability fan-in ──────────────────────────────────
+    echo "[3/7] MQ scalability fan-in"
     for n in "${FANIN_N_ARR[@]}"; do
         for s in "${SCALABILITY_SIZES_ARR[@]}"; do
             perf_run "$csv" "$stack" "scalability_fanin" "" "$s" "" "$n" \
@@ -347,8 +347,8 @@ run_stack_perf() {
         done
     done
 
-    # ── [4/5] MQ scalability pairs ───────────────────────────────────
-    echo "[4/5] MQ scalability parallel pairs"
+    # ── [4/7] MQ scalability pairs ───────────────────────────────────
+    echo "[4/7] MQ scalability parallel pairs"
     for n in "${PAIRS_N_ARR[@]}"; do
         for s in "${SCALABILITY_SIZES_ARR[@]}"; do
             perf_run "$csv" "$stack" "scalability_pairs" "" "$s" "" "$n" \
@@ -358,8 +358,8 @@ run_stack_perf() {
         done
     done
 
-    # ── [5/5] SHM ping-pong baseline ─────────────────────────────────
-    echo "[5/5] SHM ping-pong baseline"
+    # ── [5/7] SHM ping-pong baseline ─────────────────────────────────
+    echo "[5/7] SHM ping-pong baseline"
     for i in "${!PLACE_LABELS[@]}"; do
         label="${PLACE_LABELS[$i]}"
         cpus="${PLACE_CPUS[$i]}"
@@ -368,6 +368,32 @@ run_stack_perf() {
                 "shm pingpong ${label} size=${s}B" \
                 "${bindir}/shm_pingpong" \
                 -n "$PP_ITERS" -s "$s" -c "$cpus" -p "$label"
+        done
+    done
+
+    # ── [6/7] SHM throughput ─────────────────────────────────────────
+    echo "[6/7] SHM throughput"
+    for i in "${!PLACE_LABELS[@]}"; do
+        label="${PLACE_LABELS[$i]}"
+        cpus="${PLACE_CPUS[$i]}"
+        for depth in "${THROUGHPUT_DEPTHS_ARR[@]}"; do
+            for s in "${THROUGHPUT_SIZES_ARR[@]}"; do
+                perf_run "$csv" "$stack" "shm_throughput" "$label" "$s" "$depth" "" \
+                    "shm throughput ${label} depth=${depth} size=${s}B" \
+                    "${bindir}/shm_throughput" \
+                    -n "$TP_MSGS" -s "$s" -q "$depth" -c "$cpus" -p "${label}_q${depth}"
+            done
+        done
+    done
+
+    # ── [7/7] SHM parallel pairs ─────────────────────────────────────
+    echo "[7/7] SHM parallel pairs"
+    for n in "${PAIRS_N_ARR[@]}"; do
+        for s in "${SCALABILITY_SIZES_ARR[@]}"; do
+            perf_run "$csv" "$stack" "shm_pairs" "" "$s" "" "$n" \
+                "shm pairs n=${n} size=${s}B" \
+                "${bindir}/shm_pairs" \
+                -n "$n" -k "$SC_K" -s "$s" -p "pairs_n${n}"
         done
     done
 

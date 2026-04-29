@@ -274,7 +274,7 @@ run_stack_strace() {
     fi
 
     # Validate binaries
-    for b in pingpong throughput scalability shm_pingpong; do
+    for b in pingpong throughput scalability shm_pingpong shm_throughput shm_pairs; do
         [[ -x "${bindir}/${b}" ]] || {
             echo "Missing binary: ${bindir}/${b}" >&2
             echo "Check build logs at ${log}" >&2
@@ -288,7 +288,7 @@ run_stack_strace() {
     echo "============================================================"
 
     # ── [1/5] MQ pingpong ───────────────────────────────────────────
-    echo "[1/5] MQ pingpong (64B, same_core + cross_core)"
+    echo "[1/7] MQ pingpong (64B, same_core + cross_core)"
     strace_run "$outfile" "MQ pingpong" "same_core" "64B" \
         "${bindir}/pingpong" \
         -n "$PP_ITERS" -s 64 -c "$SAME_CORE_CPUS" -p same_core
@@ -298,7 +298,7 @@ run_stack_strace() {
         -n "$PP_ITERS" -s 64 -c "$CROSS_CORE_CPUS" -p cross_core
 
     # ── [2/5] SHM pingpong ──────────────────────────────────────────
-    echo "[2/5] SHM pingpong (64B, same_core + cross_core)"
+    echo "[2/7] SHM pingpong (64B, same_core + cross_core)"
     strace_run "$outfile" "SHM pingpong" "same_core" "64B" \
         "${bindir}/shm_pingpong" \
         -n "$PP_ITERS" -s 64 -c "$SAME_CORE_CPUS" -p same_core
@@ -308,7 +308,7 @@ run_stack_strace() {
         -n "$PP_ITERS" -s 64 -c "$CROSS_CORE_CPUS" -p cross_core
 
     # ── [3/5] MQ throughput ─────────────────────────────────────────
-    echo "[3/5] MQ throughput (64B, depth=1 + depth=128, same_core)"
+    echo "[3/7] MQ throughput (64B, depth=1 + depth=128, same_core)"
     strace_run "$outfile" "MQ throughput" "same_core" "depth=1 64B" \
         "${bindir}/throughput" \
         -n "$TP_MSGS" -s 64 -q 1 -c "$SAME_CORE_CPUS" -p same_core_q1
@@ -317,17 +317,29 @@ run_stack_strace() {
         "${bindir}/throughput" \
         -n "$TP_MSGS" -s 64 -q 128 -c "$SAME_CORE_CPUS" -p same_core_q128
 
-    # ── [4/5] MQ scalability fan-in ─────────────────────────────────
-    echo "[4/5] MQ scalability fan-in (n=8, 64B)"
+    # ── [4/7] MQ scalability fan-in ─────────────────────────────────
+    echo "[4/7] MQ scalability fan-in (n=8, 64B)"
     strace_run "$outfile" "MQ scalability fan-in" "" "n=8 64B" \
         "${bindir}/scalability" \
         -m c1 -n 8 -k "$SC_K" -s 64 -p fanin_n8
 
-    # ── [5/5] MQ scalability pairs ──────────────────────────────────
-    echo "[5/5] MQ scalability pairs (n=4, 64B)"
+    # ── [5/7] MQ scalability pairs ──────────────────────────────────
+    echo "[5/7] MQ scalability pairs (n=4, 64B)"
     strace_run "$outfile" "MQ scalability pairs" "" "n=4 64B" \
         "${bindir}/scalability" \
         -m c2 -n 4 -k "$SC_K" -s 64 -p pairs_n4
+
+    # ── [6/7] SHM throughput ────────────────────────────────────────
+    echo "[6/7] SHM throughput (64B, depth=128, same_core)"
+    strace_run "$outfile" "SHM throughput" "same_core" "depth=128 64B" \
+        "${bindir}/shm_throughput" \
+        -n "$TP_MSGS" -s 64 -q 128 -c "$SAME_CORE_CPUS" -p same_core_q128
+
+    # ── [7/7] SHM scalability pairs ─────────────────────────────────
+    echo "[7/7] SHM scalability pairs (n=4, 64B)"
+    strace_run "$outfile" "SHM scalability pairs" "" "n=4 64B" \
+        "${bindir}/shm_pairs" \
+        -n 4 -k "$SC_K" -s 64 -p pairs_n4
 
     echo ""
     echo "[${stack}] complete -> ${outfile}"

@@ -1,0 +1,364 @@
+########################################################
+# 05_posix_throughput_samecore_64B_q8
+# bin  : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/POSIX/bin/throughput
+# args : -r 1 -n 200000 -s 64 -q 8 -c 0,6 -p same_core_q8
+# date : 2026-04-29T03:30:24+05:30
+########################################################
+
+## Top 50 functions (FLAT, no children)
+## Each line: percent  samples  obj  symbol
+
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 418  of event 'cycles:P'
+# Event count (approx.): 1735578501
+#
+# Overhead  Command     Shared Object      Symbol                                   
+# ........  ..........  .................  .........................................
+#
+     7.10%  throughput  [kernel.kallsyms]  [k] do_mq_timedreceive
+            |          
+            |--1.03%--ct_kernel_exit.isra.0
+            |          __ct_user_enter
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedreceive@@GLIBC_2.34
+            |          
+            |--0.92%--_copy_to_user
+            |          do_mq_timedreceive
+            |          __x64_sys_mq_timedreceive
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedreceive@@GLIBC_2.34
+            |          
+            |--0.73%--ct_kernel_enter.isra.0
+            |          __ct_user_exit
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedreceive@@GLIBC_2.34
+            |          
+            |--0.71%--run_consumer
+            |          
+             --0.54%--srso_safe_ret
+
+     6.94%  throughput  [kernel.kallsyms]  [k] native_queued_spin_lock_slowpath
+            |          
+            |--2.79%--native_queued_spin_lock_slowpath
+            |          _raw_spin_lock
+            |          raw_spin_rq_lock_nested
+            |          __task_rq_lock
+            |          try_to_wake_up
+            |          wake_up_q
+            |          do_mq_timedreceive
+            |          __x64_sys_mq_timedreceive
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedreceive@@GLIBC_2.34
+            |          
+            |--0.74%--__kmalloc_noprof
+            |          security_msg_msg_alloc
+            |          load_msg
+            |          do_mq_timedsend
+            |          __x64_sys_mq_timedsend
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedsend@@GLIBC_2.34
+            |          0xabababababababab
+            |          
+            |--0.53%--__virt_addr_valid
+            |          check_heap_object
+            |          __check_object_size.part.0
+            |          __check_object_size
+            |          load_msg
+            |          do_mq_timedsend
+            |          __x64_sys_mq_timedsend
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedsend@@GLIBC_2.34
+            |          0xabababababababab
+            |          
+             --0.51%--load_msg
+                       do_mq_timedsend
+                       __x64_sys_mq_timedsend
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedsend@@GLIBC_2.34
+                       0xabababababababab
+
+     6.25%  throughput  [kernel.kallsyms]  [k] do_syscall_64
+            |          
+            |--0.73%--__slab_free
+            |          kfree
+            |          
+            |--0.59%--native_queued_spin_lock_slowpath
+            |          _raw_spin_lock
+            |          
+             --0.56%--arch_exit_to_user_mode_prepare.isra.0
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedsend@@GLIBC_2.34
+                       0xabababababababab
+
+     5.55%  throughput  [kernel.kallsyms]  [k] srso_return_thunk
+            |          
+            |--0.89%--native_queued_spin_lock_slowpath
+            |          _raw_spin_lock
+            |          do_mq_timedsend
+            |          __x64_sys_mq_timedsend
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedsend@@GLIBC_2.34
+            |          0xabababababababab
+            |          
+            |--0.84%--entry_SYSCALL_64_after_hwframe
+            |          |          
+            |           --0.60%--mq_timedsend@@GLIBC_2.34
+            |                     0xabababababababab
+            |          
+             --0.70%--do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+
+     4.40%  throughput  [kernel.kallsyms]  [k] __check_object_size.part.0
+            |          
+             --0.70%--msg_get
+                       do_mq_timedreceive
+                       __x64_sys_mq_timedreceive
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedreceive@@GLIBC_2.34
+
+     4.31%  throughput  [kernel.kallsyms]  [k] do_mq_timedsend
+            |          
+             --0.53%--wake_up_q
+                       do_mq_timedsend
+                       __x64_sys_mq_timedsend
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedsend@@GLIBC_2.34
+                       0xabababababababab
+
+     3.57%  throughput  [kernel.kallsyms]  [k] srso_safe_ret
+            |          
+             --0.94%--run_producer
+                       0xabababababababab
+
+     3.57%  throughput  [kernel.kallsyms]  [k] __ct_user_enter
+            |          
+            |--0.58%--do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedsend@@GLIBC_2.34
+            |          0xabababababababab
+            |          
+             --0.56%--__wake_up
+                       __do_notify
+                       do_mq_timedsend
+                       __x64_sys_mq_timedsend
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedsend@@GLIBC_2.34
+                       0xabababababababab
+
+     3.16%  throughput  [kernel.kallsyms]  [k] __slab_free
+            |          
+             --0.73%--check_heap_object
+                       __check_object_size.part.0
+                       __check_object_size
+                       store_msg
+                       do_mq_timedreceive
+                       __x64_sys_mq_timedreceive
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedreceive@@GLIBC_2.34
+
+     2.78%  throughput  [kernel.kallsyms]  [k] inode_set_ctime_current
+            |          
+             --0.97%--entry_SYSCALL_64
+                       mq_timedreceive@@GLIBC_2.34
+
+     2.39%  throughput  [kernel.kallsyms]  [k] entry_SYSCALL_64_after_hwframe
+            |          
+             --0.73%--__slab_free
+                       kfree
+                       free_msg
+                       do_mq_timedreceive
+                       __x64_sys_mq_timedreceive
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedreceive@@GLIBC_2.34
+
+     2.19%  throughput  [kernel.kallsyms]  [k] kfree
+     1.88%  throughput  [kernel.kallsyms]  [k] ct_kernel_exit.isra.0
+            |          
+             --0.66%--__memcg_slab_free_hook
+                       kfree
+                       free_msg
+                       do_mq_timedreceive
+                       __x64_sys_mq_timedreceive
+
+
+## Top 30 call chains (WITH CHILDREN, hot-path roll-up)
+
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 418  of event 'cycles:P'
+# Event count (approx.): 1735578501
+#
+# Children      Self  Command     Shared Object      Symbol                                   
+# ........  ........  ..........  .................  .........................................
+#
+    92.87%     2.39%  throughput  [kernel.kallsyms]  [k] entry_SYSCALL_64_after_hwframe
+            |          
+            |--90.48%--entry_SYSCALL_64_after_hwframe
+            |          |          
+            |           --88.89%--do_syscall_64
+            |                     |          
+            |                     |--68.93%--x64_sys_call
+            |                     |          |          
+            |                     |          |--34.40%--__x64_sys_mq_timedreceive
+            |                     |          |          |          
+            |                     |          |           --32.94%--do_mq_timedreceive
+            |                     |          |                     |          
+            |                     |          |                     |--9.88%--free_msg
+            |                     |          |                     |          |          
+            |                     |          |                     |          |--6.72%--kfree
+            |                     |          |                     |          |          |          
+            |                     |          |                     |          |          |--2.61%--__memcg_slab_free_hook
+            |                     |          |                     |          |          |          |          
+            |                     |          |                     |          |          |           --0.73%--refill_obj_stock
+            |                     |          |                     |          |          |          
+            |                     |          |                     |          |          |--1.94%--__slab_free
+            |                     |          |                     |          |          |          
+            |                     |          |                     |          |           --0.69%--__rcu_read_unlock
+            |                     |          |                     |          |          
+            |                     |          |                     |           --2.19%--security_msg_msg_free
+            |                     |          |                     |                     |          
+            |                     |          |                     |                      --1.70%--kfree
+            |                     |          |                     |                                |          
+            |                     |          |                     |                                 --0.73%--__slab_free
+            |                     |          |                     |          
+            |                     |          |                     |--5.43%--store_msg
+            |                     |          |                     |          |          
+            |                     |          |                     |           --4.69%--__check_object_size
+            |                     |          |                     |                     |          
+            |                     |          |                     |                      --3.96%--__check_object_size.part.0
+            |                     |          |                     |                                |          
+            |                     |          |                     |                                 --3.23%--check_heap_object
+            |                     |          |                     |                                           |          
+            |                     |          |                     |                                            --0.97%--__virt_addr_valid
+            |                     |          |                     |          
+            |                     |          |                     |--4.98%--wake_up_q
+            |                     |          |                     |          try_to_wake_up
+            |                     |          |                     |          |          
+            |                     |          |                     |           --4.00%--__task_rq_lock
+            |                     |          |                     |                     raw_spin_rq_lock_nested
+            |                     |          |                     |                     _raw_spin_lock
+            |                     |          |                     |                     native_queued_spin_lock_slowpath
+            |                     |          |                     |          
+            |                     |          |                     |--3.44%--simple_inode_init_ts
+            |                     |          |                     |          |          
+            |                     |          |                     |           --2.19%--inode_set_ctime_current
+            |                     |          |                     |          
+            |                     |          |                     |--1.77%--__wake_up
+            |                     |          |                     |          
+            |                     |          |                     |--1.17%--_copy_to_user
+            |                     |          |                     |          
+            |                     |          |                     |--0.94%--msg_get
+            |                     |          |                     |          
+            |                     |          |                      --0.73%--__check_object_size
+            |                     |          |          
+            |                     |           --33.22%--__x64_sys_mq_timedsend
+            |                     |                     |          
+            |                     |                     |--31.59%--do_mq_timedsend
+            |                     |                     |          |          
+            |                     |                     |          |--15.39%--load_msg
+            |                     |                     |          |          |          
+            |                     |                     |          |          |--5.17%--__kmalloc_node_noprof
+            |                     |                     |          |          |          |          
+            |                     |                     |          |          |           --2.82%--__memcg_slab_post_alloc_hook
+            |                     |                     |          |          |          
+            |                     |                     |          |          |--4.06%--__check_object_size
+            |                     |                     |          |          |          |          
+            |                     |                     |          |          |           --3.83%--__check_object_size.part.0
+            |                     |                     |          |          |                     |          
+            |                     |                     |          |          |                      --1.44%--check_heap_object
+            |                     |                     |          |          |                                |          
+            |                     |                     |          |          |                                 --0.53%--__virt_addr_valid
+            |                     |                     |          |          |          
+            |                     |                     |          |          |--2.61%--security_msg_msg_alloc
+            |                     |                     |          |          |          |          
+            |                     |                     |          |          |           --1.62%--__kmalloc_noprof
+            |                     |                     |          |          |          
+            |                     |                     |          |           --0.94%--rep_movs_alternative
+            |                     |                     |          |          
+            |                     |                     |          |--4.40%--_raw_spin_lock
+            |                     |                     |          |          native_queued_spin_lock_slowpath
+            |                     |                     |          |          
+            |                     |                     |          |--3.35%--__do_notify
+            |                     |                     |          |          |          
+            |                     |                     |          |           --2.70%--__wake_up
+            |                     |                     |          |                     |          
+            |                     |                     |          |                      --1.42%--_raw_spin_lock_irqsave
+            |                     |                     |          |                                __raw_spin_lock_irqsave
+            |                     |                     |          |          
+            |                     |                     |          |--2.16%--simple_inode_init_ts
+            |                     |                     |          |          |          
+            |                     |                     |          |           --1.91%--inode_set_ctime_current
+            |                     |                     |          |                     |          
+            |                     |                     |          |                      --0.72%--inode_set_ctime_to_ts
+            |                     |                     |          |          
+            |                     |                     |          |--1.69%--wq_sleep
+            |                     |                     |          |          schedule_hrtimeout_range_clock
+            |                     |                     |          |          schedule
+            |                     |                     |          |          __schedule
+            |                     |                     |          |          |          
+            |                     |                     |          |          |--0.93%--try_to_block_task.constprop.0.isra.0
+            |                     |                     |          |          |          dequeue_task
+            |                     |                     |          |          |          dequeue_task_fair
+            |                     |                     |          |          |          dequeue_entities
+            |                     |                     |          |          |          |          
+            |                     |                     |          |          |           --0.70%--dequeue_entity
+            |                     |                     |          |          |          
+            |                     |                     |          |           --0.76%--psi_task_switch
+            |                     |                     |          |                     |          
+            |                     |                     |          |                      --0.51%--psi_group_change
+            |                     |                     |          |          
+            |                     |                     |          |--0.90%--__check_object_size
+            |                     |                     |          |          
+            |                     |                     |           --0.53%--wake_up_q
+            |                     |                     |          
+            |                     |                      --0.69%--_raw_spin_unlock
+            |                     |          
+            |                     |--6.40%--__ct_user_enter
+            |                     |          |          
+            |                     |          |--1.93%--vtime_user_enter
+            |                     |          |          |          
+            |                     |          |           --1.69%--get_vtime_delta
+            |                     |          |                     |          
+            |                     |          |                      --0.96%--sched_clock
+            |                     |          |                                |          
+            |                     |          |                                 --0.72%--sched_clock_noinstr
+            |                     |          |                                           native_sched_clock
+            |                     |          |          
+            |                     |           --1.52%--ct_kernel_exit.isra.0
+            |                     |          
+            |                     |--3.89%--__ct_user_exit
+            |                     |          |          
+            |                     |          |--1.21%--vtime_user_exit
+            |                     |          |          |          

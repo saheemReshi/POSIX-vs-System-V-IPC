@@ -1,0 +1,364 @@
+########################################################
+# 06_sysv_throughput_samecore_64B_q8
+# bin  : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/throughput
+# args : -r 1 -n 200000 -s 64 -q 8 -c 0,6 -p same_core_q8
+# date : 2026-04-29T03:30:26+05:30
+########################################################
+
+## Top 50 functions (FLAT, no children)
+## Each line: percent  samples  obj  symbol
+
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 440  of event 'cycles:P'
+# Event count (approx.): 1790744904
+#
+# Overhead  Command     Shared Object      Symbol                                   
+# ........  ..........  .................  .........................................
+#
+     5.90%  throughput  [kernel.kallsyms]  [k] do_msgrcv
+            |          
+            |--0.94%--do_syscall_64
+            |          |          
+            |           --0.71%--entry_SYSCALL_64_after_hwframe
+            |                     __libc_msgrcv
+            |          
+            |--0.94%--srso_safe_ret
+            |          |          
+            |           --0.71%--__libc_msgrcv
+            |          
+             --0.84%--entry_SYSCALL_64_after_hwframe
+                       __libc_msgrcv
+
+     5.33%  throughput  [kernel.kallsyms]  [k] do_msgsnd
+            |          
+            |--1.05%--do_msgsnd
+            |          __x64_sys_msgsnd
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          __libc_msgsnd
+            |          
+            |--0.90%--ipcperms
+            |          do_msgsnd
+            |          __x64_sys_msgsnd
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          __libc_msgsnd
+            |          
+             --0.68%--srso_safe_ret
+
+     4.41%  throughput  [kernel.kallsyms]  [k] do_syscall_64
+            |          
+             --0.86%--do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       __libc_msgsnd
+
+     4.25%  throughput  [kernel.kallsyms]  [k] native_queued_spin_lock_slowpath
+            |          
+             --3.53%--native_queued_spin_lock_slowpath
+                       _raw_spin_lock
+                       |          
+                        --3.30%--raw_spin_rq_lock_nested
+                                  __task_rq_lock
+                                  try_to_wake_up
+                                  wake_up_q
+                                  do_msgrcv
+                                  __x64_sys_msgrcv
+                                  x64_sys_call
+                                  do_syscall_64
+                                  entry_SYSCALL_64_after_hwframe
+                                  __libc_msgrcv
+
+     3.56%  throughput  [kernel.kallsyms]  [k] srso_safe_ret
+     3.33%  throughput  [kernel.kallsyms]  [k] __slab_free
+            |          
+            |--0.71%--check_heap_object
+            |          __check_object_size.part.0
+            |          __check_object_size
+            |          store_msg
+            |          do_msg_fill
+            |          do_msgrcv
+            |          __x64_sys_msgrcv
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          __libc_msgrcv
+            |          
+             --0.71%--__virt_addr_valid
+                       check_heap_object
+                       __check_object_size.part.0
+                       __check_object_size
+                       store_msg
+                       do_msg_fill
+                       do_msgrcv
+                       __x64_sys_msgrcv
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       __libc_msgrcv
+
+     3.11%  throughput  [kernel.kallsyms]  [k] srso_return_thunk
+            |          
+             --0.67%--security_msg_msg_alloc
+                       load_msg
+                       do_msgsnd
+                       __x64_sys_msgsnd
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       __libc_msgsnd
+
+     2.99%  throughput  [kernel.kallsyms]  [k] __check_object_size.part.0
+            |          
+            |--0.64%--__kmalloc_node_noprof
+            |          load_msg
+            |          do_msgsnd
+            |          __x64_sys_msgsnd
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          __libc_msgsnd
+            |          
+             --0.50%--check_stack_object
+                       __check_object_size
+                       load_msg
+                       do_msgsnd
+                       __x64_sys_msgsnd
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       __libc_msgsnd
+
+     2.91%  throughput  [kernel.kallsyms]  [k] check_heap_object
+            |          
+            |--0.62%--__virt_addr_valid
+            |          
+             --0.53%--__kmalloc_node_noprof
+                       load_msg
+                       do_msgsnd
+                       __x64_sys_msgsnd
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       __libc_msgsnd
+                       0xababababababab70
+
+     2.72%  throughput  [kernel.kallsyms]  [k] __memcg_slab_free_hook
+            |          
+            |--1.11%--do_msg_fill
+            |          |          
+            |           --0.64%--do_msgrcv
+            |                     __x64_sys_msgrcv
+            |                     x64_sys_call
+            |                     do_syscall_64
+            |                     entry_SYSCALL_64_after_hwframe
+            |                     __libc_msgrcv
+            |          
+             --0.71%--__check_object_size.part.0
+
+     2.33%  throughput  [kernel.kallsyms]  [k] __ct_user_exit
+            |          
+            |--0.71%--do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          __libc_msgrcv
+            |          
+             --0.52%--native_sched_clock
+                       sched_clock_noinstr
+                       sched_clock
+                       get_vtime_delta
+                       vtime_user_enter
+                       __ct_user_enter
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       __libc_msgrcv
+
+     2.23%  throughput  [kernel.kallsyms]  [k] kfree
+            |          
+             --0.71%--do_msgrcv
+                       __x64_sys_msgrcv
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       __libc_msgrcv
+
+     2.01%  throughput  [kernel.kallsyms]  [k] entry_SYSCALL_64_after_hwframe
+            |          
+             --0.66%--entry_SYSCALL_64
+                       __libc_msgsnd
+
+     1.98%  throughput  [kernel.kallsyms]  [k] __kmalloc_noprof
+            |          
+             --1.15%--__kmalloc_noprof
+                       |          
+                        --0.93%--security_msg_msg_alloc
+                                  load_msg
+                                  do_msgsnd
+                                  __x64_sys_msgsnd
+                                  x64_sys_call
+                                  do_syscall_64
+                                  entry_SYSCALL_64_after_hwframe
+                                  __libc_msgsnd
+
+     1.97%  throughput  [kernel.kallsyms]  [k] native_sched_clock
+            |          
+             --0.84%--security_msg_msg_free
+                       free_msg
+
+
+## Top 30 call chains (WITH CHILDREN, hot-path roll-up)
+
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 440  of event 'cycles:P'
+# Event count (approx.): 1790744904
+#
+# Children      Self  Command     Shared Object      Symbol                                   
+# ........  ........  ..........  .................  .........................................
+#
+    94.11%     2.01%  throughput  [kernel.kallsyms]  [k] entry_SYSCALL_64_after_hwframe
+            |          
+            |--92.09%--entry_SYSCALL_64_after_hwframe
+            |          |          
+            |           --89.09%--do_syscall_64
+            |                     |          
+            |                     |--67.14%--x64_sys_call
+            |                     |          |          
+            |                     |          |--34.88%--__x64_sys_msgrcv
+            |                     |          |          |          
+            |                     |          |          |--30.53%--do_msgrcv
+            |                     |          |          |          |          
+            |                     |          |          |          |--9.84%--do_msg_fill
+            |                     |          |          |          |          |          
+            |                     |          |          |          |           --8.48%--store_msg
+            |                     |          |          |          |                     |          
+            |                     |          |          |          |                     |--5.15%--__check_object_size
+            |                     |          |          |          |                     |          |          
+            |                     |          |          |          |                     |           --4.67%--__check_object_size.part.0
+            |                     |          |          |          |                     |                     |          
+            |                     |          |          |          |                     |                      --2.83%--check_heap_object
+            |                     |          |          |          |                     |                                |          
+            |                     |          |          |          |                     |                                |--0.94%--__virt_addr_valid
+            |                     |          |          |          |                     |                                |          
+            |                     |          |          |          |                     |                                 --0.71%--__check_heap_object
+            |                     |          |          |          |                     |          
+            |                     |          |          |          |                      --1.92%--_copy_to_user
+            |                     |          |          |          |          
+            |                     |          |          |          |--6.99%--free_msg
+            |                     |          |          |          |          |          
+            |                     |          |          |          |          |--3.31%--kfree
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |          |--1.18%--__slab_free
+            |                     |          |          |          |          |          |          |          
+            |                     |          |          |          |          |          |           --0.71%--slab_update_freelist.isra.0
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |          |--1.18%--__memcg_slab_free_hook
+            |                     |          |          |          |          |          |          |          
+            |                     |          |          |          |          |          |           --0.94%--refill_obj_stock
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |           --0.72%--__rcu_read_lock
+            |                     |          |          |          |          |          
+            |                     |          |          |          |           --2.97%--security_msg_msg_free
+            |                     |          |          |          |                     |          
+            |                     |          |          |          |                      --1.42%--kfree
+            |                     |          |          |          |                                |          
+            |                     |          |          |          |                                 --1.18%--__slab_free
+            |                     |          |          |          |          
+            |                     |          |          |          |--3.77%--wake_up_q
+            |                     |          |          |          |          try_to_wake_up
+            |                     |          |          |          |          __task_rq_lock
+            |                     |          |          |          |          raw_spin_rq_lock_nested
+            |                     |          |          |          |          _raw_spin_lock
+            |                     |          |          |          |          native_queued_spin_lock_slowpath
+            |                     |          |          |          |          
+            |                     |          |          |          |--1.41%--ipc_obtain_object_check
+            |                     |          |          |          |          
+            |                     |          |          |          |--0.94%--__put_user_8
+            |                     |          |          |          |          
+            |                     |          |          |           --0.71%--_raw_spin_lock
+            |                     |          |          |                     native_queued_spin_lock_slowpath
+            |                     |          |          |          
+            |                     |          |          |--0.94%--percpu_counter_add_batch
+            |                     |          |          |          
+            |                     |          |          |--0.82%--__rcu_read_unlock
+            |                     |          |          |          
+            |                     |          |           --0.71%--do_msg_fill
+            |                     |          |          
+            |                     |          |--30.93%--__x64_sys_msgsnd
+            |                     |          |          |          
+            |                     |          |          |--28.02%--do_msgsnd
+            |                     |          |          |          |          
+            |                     |          |          |          |--17.20%--load_msg
+            |                     |          |          |          |          |          
+            |                     |          |          |          |          |--5.91%--__kmalloc_node_noprof
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |           --2.39%--__memcg_slab_post_alloc_hook
+            |                     |          |          |          |          |                     |          
+            |                     |          |          |          |          |                      --0.64%--obj_cgroup_charge_account
+            |                     |          |          |          |          |          
+            |                     |          |          |          |          |--3.30%--security_msg_msg_alloc
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |           --1.32%--__kmalloc_noprof
+            |                     |          |          |          |          |          
+            |                     |          |          |          |          |--2.78%--__check_object_size
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |          |--1.83%--__check_object_size.part.0
+            |                     |          |          |          |          |          |          |          
+            |                     |          |          |          |          |          |           --1.05%--check_heap_object
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |           --0.72%--check_stack_object
+            |                     |          |          |          |          |          
+            |                     |          |          |          |          |--1.23%--_copy_from_user
+            |                     |          |          |          |          |          
+            |                     |          |          |          |          |--0.61%--memset_orig
+            |                     |          |          |          |          |          
+            |                     |          |          |          |           --0.60%--__memcg_slab_post_alloc_hook
+            |                     |          |          |          |          
+            |                     |          |          |          |--5.74%--schedule
+            |                     |          |          |          |          __schedule
+            |                     |          |          |          |          |          
+            |                     |          |          |          |          |--2.22%--try_to_block_task.constprop.0.isra.0
+            |                     |          |          |          |          |          dequeue_task
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |           --2.00%--dequeue_task_fair
+            |                     |          |          |          |          |                     dequeue_entities
+            |                     |          |          |          |          |                     |          
+            |                     |          |          |          |          |                      --1.78%--dequeue_entity
+            |                     |          |          |          |          |          
+            |                     |          |          |          |          |--1.62%--prepare_task_switch
+            |                     |          |          |          |          |          __perf_event_task_sched_out
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |          |--1.11%--perf_event_context_sched_out
+            |                     |          |          |          |          |          |          |          
+            |                     |          |          |          |          |          |           --0.80%--ctx_sched_out
+            |                     |          |          |          |          |          |          
+            |                     |          |          |          |          |           --0.51%--_raw_spin_lock
+            |                     |          |          |          |          |          
+            |                     |          |          |          |           --1.27%--pick_next_task
+            |                     |          |          |          |                     |          
+            |                     |          |          |          |                      --1.06%--__pick_next_task
+            |                     |          |          |          |          
+            |                     |          |          |          |--1.12%--ipcperms
+            |                     |          |          |          |          
+            |                     |          |          |           --0.64%--ipc_obtain_object_check
+            |                     |          |          |          
+            |                     |          |          |--1.10%--__rcu_read_unlock
+            |                     |          |          |          
+            |                     |          |           --0.65%--srso_safe_ret
+            |                     |          |          
+            |                     |           --0.75%--__get_user_8
+            |                     |          
+            |                     |--6.38%--__ct_user_enter
+            |                     |          |          
+            |                     |          |--3.63%--vtime_user_enter
+            |                     |          |          |          
+            |                     |          |           --3.40%--get_vtime_delta
+            |                     |          |                     |          
+            |                     |          |                     |--1.75%--sched_clock

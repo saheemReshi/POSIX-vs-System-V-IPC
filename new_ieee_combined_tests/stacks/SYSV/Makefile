@@ -37,13 +37,15 @@ LIBS   := -lm
 BINDIR := bin
 # RESDIR := results
 
-PP := $(BINDIR)/pingpong
-TP := $(BINDIR)/throughput
-SC := $(BINDIR)/scalability
-SHM := $(BINDIR)/shm_pingpong
-PRIO := $(BINDIR)/priority_test
+PP        := $(BINDIR)/pingpong
+TP        := $(BINDIR)/throughput
+SC        := $(BINDIR)/scalability
+SHM       := $(BINDIR)/shm_pingpong
+SHM_TP    := $(BINDIR)/shm_throughput
+SHM_PAIRS := $(BINDIR)/shm_pairs
+PRIO      := $(BINDIR)/priority_test
 
-ALL_BINS := $(PP) $(TP) $(SC) $(SHM) $(PRIO)
+ALL_BINS := $(PP) $(TP) $(SC) $(SHM) $(SHM_TP) $(SHM_PAIRS) $(PRIO)
 
 RUNS  ?= 30
 SIZES := 8 64 256 1024 4096 8192
@@ -73,6 +75,12 @@ $(SC): mq_sysv/scalability.c common/timing.h common/affinity.h common/stats.h | 
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
 
 $(SHM): shm_sysv/shm_pingpong.c common/timing.h common/affinity.h common/stats.h | $(BINDIR)
+	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
+
+$(SHM_TP): shm_sysv/shm_throughput.c common/timing.h common/affinity.h common/stats.h | $(BINDIR)
+	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
+
+$(SHM_PAIRS): shm_sysv/shm_pairs.c common/timing.h common/affinity.h common/stats.h | $(BINDIR)
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
 
 $(PRIO): priority/priority_test.c common/timing.h common/affinity.h common/stats.h | $(BINDIR)

@@ -65,6 +65,9 @@
 #define SEM_FWD   "/ipc_shm_pp_fwd"
 #define SEM_BWD   "/ipc_shm_pp_bwd"
 
+#define WARMUP_FRAC 0.05
+#define WARMUP_MAX  5000
+
 /* ── P1 (initiator) ─────────────────────────────────────────────────────── */
 
 static void run_p1(volatile char *shm, size_t msz,
@@ -171,10 +174,10 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    uint64_t *samples = alloc_samples(iters);
+    uint64_t warmup = (uint64_t)((double)iters * WARMUP_FRAC);
+    if (warmup > WARMUP_MAX) warmup = WARMUP_MAX;
 
-    /* Snapshot memory before benchmark (parent view) */
-    mem_snapshot_t mem_before = mem_snapshot();
+    uint64_t *samples = alloc_samples(iters);
 
     /* ── Fork ─────────────────────────────────────────────────────────── */
 
@@ -184,6 +187,7 @@ int main(int argc, char *argv[])
     if (pid == 0) {
         /* Child = P2 (responder) */
         if (cpu1 >= 0) pin_to_cpu(cpu1);
+        if (warmup) run_p2(shm, msz, sem_fwd, sem_bwd, warmup);
         run_p2(shm, msz, sem_fwd, sem_bwd, iters);
         sem_close(sem_fwd);
         sem_close(sem_bwd);
@@ -194,14 +198,17 @@ int main(int argc, char *argv[])
     /* Parent = P1 (initiator) */
     if (cpu0 >= 0) pin_to_cpu(cpu0);
 
+    if (warmup) {
+        uint64_t *dummy = alloc_samples(warmup);
+        run_p1(shm, msz, sem_fwd, sem_bwd, warmup, dummy);
+        free(dummy);
+    }
+
     uint64_t t0 = now_ns();
     run_p1(shm, msz, sem_fwd, sem_bwd, iters, samples);
     uint64_t elapsed = now_ns() - t0;
 
     waitpid(pid, NULL, 0);
-
-    /* Snapshot memory after benchmark */
-    mem_snapshot_t mem_after = mem_snapshot();
 
     /* ── Compute and emit results ─────────────────────────────────────── */
 
@@ -213,15 +220,16 @@ int main(int argc, char *argv[])
         .n            = iters,
         .msg_size     = msz,
         .elapsed_ns   = elapsed,
-        .mem_delta_kb = mem_delta_kb(&mem_before, &mem_after),
+        .mem_delta_kb = 0,
         .run_id       = run_id,
     };
     compute_stats(&r);
 
-    /* Correct bidirectional throughput (same logic as mq_posix/pingpong.c) */
+    /* Single-counted throughput: one-way bytes / elapsed (matches
+     * the throughput binary's metric for direct comparison). */
     double sec = (double)elapsed / 1e9;
     r.throughput_msg_s = (double)iters / sec;
-    r.throughput_MB_s  = ((double)iters * 2.0 * (double)msz)
+    r.throughput_MB_s  = ((double)iters * (double)msz)
                           / sec / (1024.0 * 1024.0);
 
     print_csv_row_mech("shm_posix", "pingpong", 2, label, &r);

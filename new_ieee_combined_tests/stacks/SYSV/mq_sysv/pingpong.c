@@ -47,6 +47,9 @@
 /* mtype values — only one queue per msqid so any positive value works */
 #define MTYPE_MSG  1L
 
+#define WARMUP_FRAC 0.05
+#define WARMUP_MAX  5000
+
 /* System V message envelope */
 typedef struct {
     long mtype;
@@ -180,8 +183,10 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    uint64_t warmup = (uint64_t)((double)iters * WARMUP_FRAC);
+    if (warmup > WARMUP_MAX) warmup = WARMUP_MAX;
+
     uint64_t *samples = alloc_samples(iters);
-    mem_snapshot_t mem_before = mem_snapshot();
 
     pid_t pid = fork();
     if (pid < 0) { perror("fork"); return 1; }
@@ -189,6 +194,15 @@ int main(int argc, char *argv[])
     if (pid == 0) {
         /* Child = P2 (responder) */
         if (cpu1 >= 0) pin_to_cpu(cpu1);
+        if (warmup) {
+            sv_msg_t *wbuf = alloc_msg(msz);
+            for (uint64_t i = 0; i < warmup; i++) {
+                if (msgrcv(q_fwd, wbuf, msz, MTYPE_MSG, 0) < 0) { perror("msgrcv warmup"); exit(1); }
+                wbuf->mtype = MTYPE_MSG;
+                if (msgsnd(q_bwd, wbuf, msz, 0) != 0) { perror("msgsnd warmup"); exit(1); }
+            }
+            free(wbuf);
+        }
         run_p2(q_fwd, q_bwd, iters, msz);
         exit(0);
     }
@@ -196,28 +210,38 @@ int main(int argc, char *argv[])
     /* Parent = P1 (initiator) */
     if (cpu0 >= 0) pin_to_cpu(cpu0);
 
+    if (warmup) {
+        sv_msg_t *wbuf = alloc_msg(msz);
+        for (uint64_t i = 0; i < warmup; i++) {
+            wbuf->mtype = MTYPE_MSG;
+            if (msgsnd(q_fwd, wbuf, msz, 0) != 0) { perror("msgsnd warmup"); exit(1); }
+            if (msgrcv(q_bwd, wbuf, msz, MTYPE_MSG, 0) < 0) { perror("msgrcv warmup"); exit(1); }
+        }
+        free(wbuf);
+    }
+
     uint64_t t0      = now_ns();
     run_p1(q_fwd, q_bwd, iters, msz, samples);
     uint64_t elapsed = now_ns() - t0;
 
     waitpid(pid, NULL, 0);
-    mem_snapshot_t mem_after = mem_snapshot();
 
     /* RTT → one-way latency */
     for (uint64_t i = 0; i < iters; i++) samples[i] /= 2;
 
     result_t r = { .samples = samples, .n = iters,
                    .msg_size = msz, .elapsed_ns = elapsed,
-                   .mem_delta_kb = mem_delta_kb(&mem_before, &mem_after),
+                   .mem_delta_kb = 0,
                    .run_id = run_id };
     compute_stats(&r);
 
-    /* Override throughput: each round trip moves msg_size in both directions */
+    /* Single-counted throughput: one-way bytes / elapsed, comparable to
+     * the throughput binary's metric. */
     double sec = elapsed / 1e9;
     r.throughput_msg_s = iters / sec;
-    r.throughput_MB_s  = (iters * 2 * msz) / sec / (1024.0 * 1024.0);
+    r.throughput_MB_s  = (iters * msz) / sec / (1024.0 * 1024.0);
 
-    print_csv_row("pingpong", 2, label, &r);
+    print_csv_row_mech("mq_sysv", "pingpong", 2, label, &r);
 
     remove_queue(q_fwd);
     remove_queue(q_bwd);

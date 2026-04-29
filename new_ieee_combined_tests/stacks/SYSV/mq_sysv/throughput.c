@@ -39,6 +39,9 @@
 
 #define MTYPE_MSG  1L
 
+#define WARMUP_FRAC 0.05
+#define WARMUP_MAX  5000
+
 typedef struct {
     long mtype;
     char mtext[1];
@@ -134,12 +137,37 @@ int main(int argc, char *argv[])
      * POSIX equivalent: struct mq_attr { .mq_maxmsg = depth, .mq_msgsize = msz }.
      * System V counts bytes (msg_qbytes), not messages:
      *   each message occupies sizeof(long) [mtype] + msz [mtext] bytes.
+     *
+     * IPC_SET fails (silently truncating capacity) when msgmnb < requested.
+     * That would make the depth parameter meaningless beyond the cap, so we
+     * make it a hard error and ask the user to raise kernel.msgmnb.
      */
     struct msqid_ds ds;
     msgctl(msqid, IPC_STAT, &ds);
-    ds.msg_qbytes = (unsigned long)depth * (sizeof(long) + msz);
-    if (msgctl(msqid, IPC_SET, &ds) != 0)
-        perror("msgctl IPC_SET msg_qbytes (non-fatal)");
+    unsigned long requested_qbytes = (unsigned long)depth * (sizeof(long) + msz);
+    ds.msg_qbytes = requested_qbytes;
+    if (msgctl(msqid, IPC_SET, &ds) != 0) {
+        fprintf(stderr,
+            "throughput: msgctl(IPC_SET) failed for msg_qbytes=%lu (errno=%d).\n"
+            "  Required for depth=%ld, msg_size=%zu.\n"
+            "  Raise the kernel limit, e.g.:\n"
+            "    sudo sysctl -w kernel.msgmnb=%lu\n",
+            requested_qbytes, errno, depth, msz, requested_qbytes);
+        msgctl(msqid, IPC_RMID, NULL);
+        return 1;
+    }
+    /* Verify the kernel actually applied the value (some kernels round) */
+    if (msgctl(msqid, IPC_STAT, &ds) == 0 && ds.msg_qbytes < requested_qbytes) {
+        fprintf(stderr,
+            "throughput: kernel applied msg_qbytes=%lu (< requested %lu).\n"
+            "  Raise: sudo sysctl -w kernel.msgmnb=%lu\n",
+            (unsigned long)ds.msg_qbytes, requested_qbytes, requested_qbytes);
+        msgctl(msqid, IPC_RMID, NULL);
+        return 1;
+    }
+
+    uint64_t warmup = (uint64_t)((double)n_msgs * WARMUP_FRAC);
+    if (warmup > WARMUP_MAX) warmup = WARMUP_MAX;
 
     pid_t pid = fork();
     if (pid < 0) { perror("fork"); msgctl(msqid, IPC_RMID, NULL); return 1; }
@@ -147,6 +175,7 @@ int main(int argc, char *argv[])
     if (pid == 0) {
         /* Child = consumer */
         if (cpu1 >= 0) pin_to_cpu(cpu1);
+        if (warmup) run_consumer(msqid, warmup, msz);
         run_consumer(msqid, n_msgs, msz);
         exit(0);
     }
@@ -154,13 +183,13 @@ int main(int argc, char *argv[])
     /* Parent = producer */
     if (cpu0 >= 0) pin_to_cpu(cpu0);
 
-    mem_snapshot_t mem_before = mem_snapshot();
+    if (warmup) run_producer(msqid, warmup, msz);
+
     uint64_t t0      = now_ns();
     run_producer(msqid, n_msgs, msz);
     uint64_t elapsed = now_ns() - t0;
 
     waitpid(pid, NULL, 0);
-    mem_snapshot_t mem_after = mem_snapshot();
 
     double sec = elapsed / 1e9;
     result_t r = {
@@ -170,10 +199,10 @@ int main(int argc, char *argv[])
         .avg_ns           = (double)elapsed / n_msgs,
         .throughput_msg_s = n_msgs / sec,
         .throughput_MB_s  = (n_msgs * msz) / sec / (1024.0 * 1024.0),
-        .mem_delta_kb     = mem_delta_kb(&mem_before, &mem_after),
+        .mem_delta_kb     = 0,
         .run_id           = run_id,
     };
-    print_csv_row("throughput", 2, label, &r);
+    print_csv_row_mech("mq_sysv", "throughput", 2, label, &r);
 
     msgctl(msqid, IPC_RMID, NULL);
     return 0;

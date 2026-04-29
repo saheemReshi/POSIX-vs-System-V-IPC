@@ -182,7 +182,7 @@ static int run_c1(int n, uint32_t k, size_t msz, const char *label, int run_id)
         .mem_delta_kb     = mem_delta_kb(&mem_before, &mem_after),
         .run_id           = run_id,
     };
-    print_csv_row(bench, n + 1, label, &r);
+    print_csv_row_mech("mq_sysv", bench, n + 1, label, &r);
 
     remove_queue(msqid);
     return 0;
@@ -350,7 +350,7 @@ static int run_c2(int n, uint64_t iters, size_t msz, const char *label, int run_
     compute_stats(&r);
     r.throughput_msg_s = 0;   /* latency benchmark — throughput not meaningful */
     r.throughput_MB_s  = 0;
-    print_csv_row(bench, n * 2, label, &r);
+    print_csv_row_mech("mq_sysv", bench, n * 2, label, &r);
 
     /* Cleanup: remove all pair queues */
     for (int p = 0; p < n; p++) {

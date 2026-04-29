@@ -33,6 +33,31 @@
 #define Q_FWD "/ipc_pp_fwd"
 #define Q_BWD "/ipc_pp_bwd"
 
+#define WARMUP_FRAC 0.05
+#define WARMUP_MAX  5000
+
+static void warmup_p1(mqd_t fwd, mqd_t bwd, uint64_t w, size_t msz)
+{
+    char *buf = malloc(msz);
+    if (!buf) { perror("malloc"); exit(1); }
+    for (uint64_t i = 0; i < w; i++) {
+        if (mq_send(fwd, buf, msz, 0) != 0)      { perror("mq_send warmup");    exit(1); }
+        if (mq_receive(bwd, buf, msz, NULL) < 0)  { perror("mq_receive warmup"); exit(1); }
+    }
+    free(buf);
+}
+
+static void warmup_p2(mqd_t fwd, mqd_t bwd, uint64_t w, size_t msz)
+{
+    char *buf = malloc(msz);
+    if (!buf) { perror("malloc"); exit(1); }
+    for (uint64_t i = 0; i < w; i++) {
+        if (mq_receive(fwd, buf, msz, NULL) < 0)  { perror("mq_receive warmup"); exit(1); }
+        if (mq_send(bwd, buf, msz, 0) != 0)       { perror("mq_send warmup");    exit(1); }
+    }
+    free(buf);
+}
+
 static void run_p1(mqd_t fwd, mqd_t bwd, uint64_t iters,
                    size_t msz, uint64_t *samples)
 {
@@ -103,14 +128,17 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    uint64_t warmup = (uint64_t)((double)iters * WARMUP_FRAC);
+    if (warmup > WARMUP_MAX) warmup = WARMUP_MAX;
+
     uint64_t *samples = alloc_samples(iters);
-    mem_snapshot_t mem_before = mem_snapshot();
 
     pid_t pid = fork();
     if (pid < 0) { perror("fork"); return 1; }
     if (pid == 0) {
         mq_close(p1_fwd); mq_close(p1_bwd);
         if (cpu1 >= 0) pin_to_cpu(cpu1);
+        if (warmup) warmup_p2(p2_fwd, p2_bwd, warmup, msz);
         run_p2(p2_fwd, p2_bwd, iters, msz);
         mq_close(p2_fwd); mq_close(p2_bwd);
         exit(0);
@@ -119,27 +147,27 @@ int main(int argc, char *argv[])
     mq_close(p2_fwd); mq_close(p2_bwd);
     if (cpu0 >= 0) pin_to_cpu(cpu0);
 
+    if (warmup) warmup_p1(p1_fwd, p1_bwd, warmup, msz);
+
     uint64_t t0 = now_ns();
     run_p1(p1_fwd, p1_bwd, iters, msz, samples);
     uint64_t elapsed = now_ns() - t0;
     waitpid(pid, NULL, 0);
-
-    mem_snapshot_t mem_after = mem_snapshot();
 
     /* RTT → one-way latency */
     for (uint64_t i = 0; i < iters; i++) samples[i] /= 2;
 
     result_t r = { .samples = samples, .n = iters,
                    .msg_size = msz, .elapsed_ns = elapsed,
-                   .mem_delta_kb = mem_delta_kb(&mem_before, &mem_after),
+                   .mem_delta_kb = 0,
                    .run_id = run_id };
     compute_stats(&r);
-    /* Override throughput: each round trip moves msg_size bytes in both
-     * directions, so effective bandwidth is 2x the one-way payload.
-     * compute_stats uses msg_size*1 so we correct it here after the call. */
+    /* Throughput: one-way bytes / elapsed (single-counted, comparable to
+     * throughput binary).  Each round trip moves one msg in each direction;
+     * we report the unidirectional rate. */
     double sec = elapsed / 1e9;
     r.throughput_msg_s = iters / sec;
-    r.throughput_MB_s  = (iters * 2 * msz) / sec / (1024.0 * 1024.0);
+    r.throughput_MB_s  = (iters * msz) / sec / (1024.0 * 1024.0);
     print_csv_row("pingpong", 2, label, &r);
 
     mq_close(p1_fwd); mq_close(p1_bwd);

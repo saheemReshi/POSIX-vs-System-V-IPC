@@ -34,6 +34,9 @@
 #define SEM_FWD 0
 #define SEM_BWD 1
 
+#define WARMUP_FRAC 0.05
+#define WARMUP_MAX  5000
+
 union semun {
     int val;
     struct semid_ds *buf;
@@ -173,8 +176,10 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    uint64_t warmup = (uint64_t)((double)iters * WARMUP_FRAC);
+    if (warmup > WARMUP_MAX) warmup = WARMUP_MAX;
+
     uint64_t *samples = alloc_samples(iters);
-    mem_snapshot_t mem_before = mem_snapshot();
 
     pid_t pid = fork();
     if (pid < 0) {
@@ -188,6 +193,7 @@ int main(int argc, char *argv[])
 
     if (pid == 0) {
         if (cpu1 >= 0) pin_to_cpu(cpu1);
+        if (warmup) run_p2(shm, msz, semid, warmup);
         run_p2(shm, msz, semid, iters);
         shmdt((const void *)shm);
         exit(0);
@@ -195,12 +201,17 @@ int main(int argc, char *argv[])
 
     if (cpu0 >= 0) pin_to_cpu(cpu0);
 
+    if (warmup) {
+        uint64_t *dummy = alloc_samples(warmup);
+        run_p1(shm, msz, semid, warmup, dummy);
+        free(dummy);
+    }
+
     uint64_t t0 = now_ns();
     run_p1(shm, msz, semid, iters, samples);
     uint64_t elapsed = now_ns() - t0;
 
     waitpid(pid, NULL, 0);
-    mem_snapshot_t mem_after = mem_snapshot();
 
     for (uint64_t i = 0; i < iters; i++) samples[i] /= 2;
 
@@ -209,14 +220,16 @@ int main(int argc, char *argv[])
         .n = iters,
         .msg_size = msz,
         .elapsed_ns = elapsed,
-        .mem_delta_kb = mem_delta_kb(&mem_before, &mem_after),
+        .mem_delta_kb = 0,
         .run_id = run_id,
     };
     compute_stats(&r);
 
+    /* Single-counted throughput: one-way bytes / elapsed (comparable to
+     * the throughput binary). */
     double sec = (double)elapsed / 1e9;
     r.throughput_msg_s = (double)iters / sec;
-    r.throughput_MB_s = ((double)iters * 2.0 * (double)msz) /
+    r.throughput_MB_s = ((double)iters * (double)msz) /
                         sec / (1024.0 * 1024.0);
 
     print_csv_row_mech("shm_sysv", "pingpong", 2, label, &r);

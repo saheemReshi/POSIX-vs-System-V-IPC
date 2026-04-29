@@ -1,0 +1,86 @@
+\begin{thebibliography}{10}
+
+\bibitem{amd_zen_arch}
+{Advanced Micro Devices, Inc.}
+\newblock {AMD ``Zen'' Architecture Overview}.
+\newblock Whitepaper, AMD, 2019.
+
+\bibitem{amd_infinity_fabric}
+{Advanced Micro Devices, Inc.}
+\newblock {AMD Infinity Architecture}.
+\newblock \url{https://www.amd.com/en/technologies/infinity-architecture},
+  2024.
+
+\bibitem{cliff1993}
+Norman Cliff.
+\newblock {Dominance statistics: Ordinal analyses to answer ordinal questions}.
+\newblock {\em Psychological Bulletin}, 114(3):494--509, 1993.
+
+\bibitem{drepper2011futexes}
+Ulrich Drepper.
+\newblock {Futexes Are Tricky}.
+\newblock Technical report, Red Hat Inc., 2011.
+
+\bibitem{efron1979bootstrap}
+Bradley Efron.
+\newblock {Bootstrap methods: Another look at the jackknife}.
+\newblock {\em The Annals of Statistics}, 7(1):1--26, 1979.
+
+\bibitem{posix2017}
+{IEEE and The Open Group}.
+\newblock {IEEE Standard for Information Technology -- Portable Operating
+  System Interface (POSIX{\textregistered})}.
+\newblock IEEE Std 1003.1-2017, 2017.
+
+\bibitem{linux_clock}
+{Linux man-pages project}.
+\newblock {clock\_gettime(2) -- clocks and timers}.
+\newblock \url{https://man7.org/linux/man-pages/man2/clock_gettime.2.html},
+  2024.
+
+\bibitem{linux_futex}
+{Linux man-pages project}.
+\newblock {futex(7) -- fast user-space locking}.
+\newblock \url{https://man7.org/linux/man-pages/man7/futex.7.html}, 2024.
+
+\bibitem{linux_mq_overview}
+{Linux man-pages project}.
+\newblock {mq\_overview(7) -- Overview of POSIX message queues}.
+\newblock \url{https://man7.org/linux/man-pages/man7/mq_overview.7.html}, 2024.
+
+\bibitem{linux_setaffinity}
+{Linux man-pages project}.
+\newblock {sched\_setaffinity(2) -- set a thread's CPU affinity mask}.
+\newblock \url{https://man7.org/linux/man-pages/man2/sched_setaffinity.2.html},
+  2024.
+
+\bibitem{linux_sysvipc}
+{Linux man-pages project}.
+\newblock {sysvipc(7) -- System V interprocess communication mechanisms}.
+\newblock \url{https://man7.org/linux/man-pages/man7/sysvipc.7.html}, 2024.
+
+\bibitem{mannwhitney1947}
+Henry~B. Mann and Donald~R. Whitney.
+\newblock {On a test of whether one of two random variables is stochastically
+  larger than the other}.
+\newblock {\em The Annals of Mathematical Statistics}, 18(1):50--60, 1947.
+
+\bibitem{mcvoy1996lmbench}
+Larry McVoy and Carl Staelin.
+\newblock {lmbench: Portable Tools for Performance Analysis}.
+\newblock In {\em Proceedings of the USENIX Annual Technical Conference}, pages
+  279--294, 1996.
+
+\bibitem{stevens1999}
+W.~Richard Stevens.
+\newblock {\em {UNIX Network Programming, Volume 2: Interprocess
+  Communications}}.
+\newblock Prentice Hall, 2 edition, 1999.
+
+\bibitem{welch1947}
+Bernard~L. Welch.
+\newblock {The generalization of Student's problem when several different
+  population variances are involved}.
+\newblock {\em Biometrika}, 34(1/2):28--35, 1947.
+
+\end{thebibliography}

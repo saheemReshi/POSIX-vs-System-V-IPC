@@ -29,6 +29,9 @@
 
 #define Q_NAME "/ipc_throughput"
 
+#define WARMUP_FRAC 0.05
+#define WARMUP_MAX  5000
+
 static void run_producer(mqd_t q, uint64_t n, size_t msz)
 {
     char *buf = malloc(msz);
@@ -154,11 +157,15 @@ int main(int argc, char *argv[])
         perror("mq_open rq"); mq_close(wq); mq_unlink(Q_NAME); return 1;
     }
 
+    uint64_t warmup = (uint64_t)((double)n_msgs * WARMUP_FRAC);
+    if (warmup > WARMUP_MAX) warmup = WARMUP_MAX;
+
     pid_t pid = fork();
     if (pid < 0) { perror("fork"); return 1; }
     if (pid == 0) {
         mq_close(wq);   /* consumer only needs read end */
         if (cpu1 >= 0) pin_to_cpu(cpu1);
+        if (warmup) run_consumer(rq, warmup, msz);
         run_consumer(rq, n_msgs, msz);
         mq_close(rq);
         exit(0);
@@ -167,11 +174,11 @@ int main(int argc, char *argv[])
     mq_close(rq);   /* producer only needs write end */
     if (cpu0 >= 0) pin_to_cpu(cpu0);
 
-    mem_snapshot_t mem_before = mem_snapshot();
+    if (warmup) run_producer(wq, warmup, msz);
+
     uint64_t t0 = now_ns();
     run_producer(wq, n_msgs, msz);
     uint64_t elapsed = now_ns() - t0;
-    mem_snapshot_t mem_after = mem_snapshot();
 
     waitpid(pid, NULL, 0);
 
@@ -181,7 +188,7 @@ int main(int argc, char *argv[])
         .avg_ns           = (double)elapsed / n_msgs,
         .throughput_msg_s = n_msgs / sec,
         .throughput_MB_s  = (n_msgs * msz) / sec / (1024.0 * 1024.0),
-        .mem_delta_kb     = mem_delta_kb(&mem_before, &mem_after),
+        .mem_delta_kb     = 0,
         .run_id           = run_id,
     };
     print_csv_row("throughput", 2, label, &r);

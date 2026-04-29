@@ -1,0 +1,115 @@
+Running the suite on Ubuntu
+
+  One-time setup (do this once on the test machine)
+
+  1. Install dependencies:
+  sudo apt update
+  sudo apt install -y build-essential gcc make python3 python3-pip \
+                      linux-tools-common linux-tools-$(uname -r) strace bc util-linux
+  pip3 install --user pandas matplotlib numpy scipy
+
+  2. Permanent RLIMIT_MSGQUEUE (so you don't need the sudo prlimit bash wrapper):
+  sudo tee -a /etc/security/limits.conf <<'EOF'
+  *  soft  msgqueue  unlimited
+  *  hard  msgqueue  unlimited
+  *  soft  nofile    65536
+  *  hard  nofile    65536
+  EOF
+  Then log out and back in. Verify with ulimit -q -n — should show large values.
+
+  3. (Recommended) CPU isolation. Edit /etc/default/grub:
+  GRUB_CMDLINE_LINUX_DEFAULT="quiet splash isolcpus=4-7 nohz_full=4-7 rcu_nocbs=4-7"
+  Replace 4-7 with the cores you want isolated (typically the higher-numbered ones; on a 4c/8t chip pick 4-7 which are the SMT siblings of cores
+  0-3). Then:
+  sudo update-grub
+  sudo reboot
+  After reboot, verify: cat /proc/cmdline should show the new flags.
+
+  4. (Recommended) Disable Turbo Boost and pin IRQs off the isolated cores:
+  echo 0 | sudo tee /sys/devices/system/cpu/cpufreq/boost
+  for f in /proc/irq/*/smp_affinity_list; do echo 0-3 | sudo tee $f >/dev/null; done
+  Re-run these after every reboot (or wrap them in a systemd unit).
+
+  Per-run setup (cache sudo creds before each suite)
+
+  cd /path/to/POSIX-vs-System-V-IPC/new_ieee_combined_tests
+  sudo -v   # cache sudo password for ~15 minutes
+
+  Running the benchmarks
+
+  Smoke test first (3 runs, reduced iterations — should finish in a couple minutes; confirms binaries build and the matrix runs end-to-end):
+  make quick
+  Inspect results/raw/posix/all_runs.csv and results/raw/sysv/all_runs.csv. Each should have a header row and ~hundreds of data rows. If anything
+  looks empty, check results/logs/*_run.log.
+
+  Full timing suite (20 runs per cell, randomised order, both stacks):
+  make run
+  Expected wall time on a quiet desktop: roughly 2–6 hours depending on CPU. The randomised order means the suite cannot be checkpointed mid-run —
+   start it when you can leave the machine alone.
+
+  Run the analysis (produces all tables, plots, and analysis_report.md):
+  make analyze
+  Output lands in results/analysis/:
+  - tables/master_comparison.csv — the headline table for the paper
+  - tables/per_config_summary.csv — full descriptive stats
+  - figures/*.{png,pdf} — submission-ready plots
+  - analysis_report.md — narrative summary of significant cells
+
+  Optional deeper profiling (run after the timing suite is in)
+
+  Hardware counters (perf, ~30–60 min):
+  sudo -v
+  make perf
+  make analyze   # rerun to merge perf data into tables/perf_summary.csv
+
+  Syscall summaries (strace, ~10–20 min — runs only representative configs):
+  sudo -v
+  make strace
+  make analyze   # rerun to merge strace data into tables/strace_summary.csv
+
+  Verifying the run before claiming results
+
+  Three sanity checks before drawing conclusions:
+
+  1. cat results/logs/topology.txt — confirm CPU model, kernel, governor, and chosen placement pairs match what you intended.
+  2. head -1 results/raw/combined/all_runs.csv — confirm CSV header.
+  3. awk -F, 'NR>1 {print $1}' results/raw/combined/all_runs.csv | sort -u — confirm all four mechanisms are present (mq_posix, mq_sysv,
+  shm_posix, shm_sysv). If you see only mq_posix/mq_sysv and not shm_*, the SHM binaries didn't get built — check results/logs/posix_run.log and
+  results/logs/sysv_run.log.
+
+  Common failure modes and fixes
+
+  ┌─────────────────────────────────┬───────────────────────────────────────────┬─────────────────────────────────────────────────────────────┐
+  │             Symptom             │                   Cause                   │                             Fix                             │
+  ├─────────────────────────────────┼───────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+  │ mq_open: Resource temporarily   │ RLIMIT_MSGQUEUE too low                   │ Step 2 of one-time setup, then log out/in                   │
+  │ unavailable                     │                                           │                                                             │
+  ├─────────────────────────────────┼───────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+  │ msgctl IPC_SET failed for       │ kernel.msgmnb < requested capacity        │ sudo sysctl -w kernel.msgmnb=8388608 (the suggestion the    │
+  │ msg_qbytes=...                  │                                           │ binary itself prints)                                       │
+  ├─────────────────────────────────┼───────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+  │ perf: not found                 │ linux-tools not installed                 │ sudo apt install linux-tools-$(uname -r)                    │
+  ├─────────────────────────────────┼───────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+  │ perf_event_open: Permission     │ paranoid mode enabled                     │ make setup-perf (or sudo sysctl -w                          │
+  │ denied                          │                                           │ kernel.perf_event_paranoid=-1)                              │
+  ├─────────────────────────────────┼───────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+  │ Empty CSV / build failed        │ C source fail                             │ cat results/logs/posix_run.log (or sysv)                    │
+  ├─────────────────────────────────┼───────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+  │ same_l2 = <none> in topology    │ CPU has no shared-L2 cluster — normal on  │ Ignore; suite skips that axis                               │
+  │                                 │ most desktop chips                        │                                                             │
+  ├─────────────────────────────────┼───────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+  │ Suite takes far longer than     │ Some other workload running               │ Check top; the test box should be otherwise idle            │
+  │ expected                        │                                           │                                                             │
+  └─────────────────────────────────┴───────────────────────────────────────────┴─────────────────────────────────────────────────────────────┘
+
+  Re-running just one part
+
+  make run-posix     # POSIX timing only
+  make run-sysv      # SysV timing only
+  make clean         # nukes results/, binaries — start fresh
+
+  What to put in the paper's experimental-setup section
+
+  Verbatim from results/logs/topology.txt (auto-captured): kernel version, CPU model, gcc version, mitigations status, governor, boost state,
+  isolcpus mask, run config (RUNS, PP_ITERS, etc.), and the CPU pairs picked for each placement axis. Also cite CHANGES.md § 2 (limitations) and §
+   3 (future work) as the threats-to-validity / future-work content.

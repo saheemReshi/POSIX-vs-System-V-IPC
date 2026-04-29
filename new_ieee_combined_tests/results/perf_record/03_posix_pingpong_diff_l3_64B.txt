@@ -1,0 +1,364 @@
+########################################################
+# 03_posix_pingpong_diff_l3_64B
+# bin  : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/POSIX/bin/pingpong
+# args : -r 1 -n 50000 -s 64 -c 0,3 -p diff_l3
+# date : 2026-04-29T03:30:20+05:30
+########################################################
+
+## Top 50 functions (FLAT, no children)
+## Each line: percent  samples  obj  symbol
+
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 489  of event 'cycles:P'
+# Event count (approx.): 2001060130
+#
+# Overhead  Command   Shared Object      Symbol                                   
+# ........  ........  .................  .........................................
+#
+     4.28%  pingpong  [kernel.kallsyms]  [k] dequeue_entity
+            |          
+            |--1.23%--psi_group_change
+            |          |          
+            |           --0.82%--psi_task_switch
+            |                     __schedule
+            |                     schedule
+            |                     schedule_hrtimeout_range_clock
+            |                     wq_sleep
+            |                     do_mq_timedreceive
+            |                     __x64_sys_mq_timedreceive
+            |                     x64_sys_call
+            |                     do_syscall_64
+            |                     entry_SYSCALL_64_after_hwframe
+            |                     mq_timedreceive@@GLIBC_2.34
+            |                     __libc_start_call_main
+            |                     __libc_start_main@@GLIBC_2.34
+            |                     _start
+            |          
+             --0.57%--local_clock
+                       ctx_sched_out
+                       perf_event_context_sched_out
+                       __perf_event_task_sched_out
+                       prepare_task_switch
+                       __schedule
+                       schedule
+                       schedule_hrtimeout_range_clock
+                       wq_sleep
+                       do_mq_timedreceive
+                       __x64_sys_mq_timedreceive
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedreceive@@GLIBC_2.34
+                       __libc_start_call_main
+                       __libc_start_main@@GLIBC_2.34
+                       _start
+
+     3.88%  pingpong  [kernel.kallsyms]  [k] __smp_call_single_queue
+            |          
+            |--1.05%--update_curr
+            |          dequeue_entity
+            |          dequeue_entities
+            |          dequeue_task_fair
+            |          dequeue_task
+            |          try_to_block_task.constprop.0.isra.0
+            |          __schedule
+            |          schedule
+            |          schedule_hrtimeout_range_clock
+            |          wq_sleep
+            |          do_mq_timedreceive
+            |          __x64_sys_mq_timedreceive
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedreceive@@GLIBC_2.34
+            |          __libc_start_call_main
+            |          __libc_start_main@@GLIBC_2.34
+            |          _start
+            |          
+            |--0.89%--dequeue_entity
+            |          dequeue_entities
+            |          dequeue_task_fair
+            |          dequeue_task
+            |          try_to_block_task.constprop.0.isra.0
+            |          __schedule
+            |          schedule
+            |          schedule_hrtimeout_range_clock
+            |          wq_sleep
+            |          do_mq_timedreceive
+            |          __x64_sys_mq_timedreceive
+            |          x64_sys_call
+            |          do_syscall_64
+            |          entry_SYSCALL_64_after_hwframe
+            |          mq_timedreceive@@GLIBC_2.34
+            |          __libc_start_call_main
+            |          __libc_start_main@@GLIBC_2.34
+            |          _start
+            |          
+             --0.64%--__update_load_avg_se
+
+     3.79%  pingpong  [kernel.kallsyms]  [k] do_mq_timedsend
+            |          
+             --2.10%--_raw_spin_lock
+                       __x64_sys_mq_timedreceive
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedreceive@@GLIBC_2.34
+                       __libc_start_call_main
+                       __libc_start_main@@GLIBC_2.34
+                       _start
+
+     3.52%  pingpong  [kernel.kallsyms]  [k] srso_safe_ret
+     3.22%  pingpong  [kernel.kallsyms]  [k] update_load_avg
+            |          
+             --0.79%--psi_group_change
+                       |          
+                        --0.56%--psi_task_switch
+                                  __schedule
+                                  schedule
+                                  schedule_hrtimeout_range_clock
+                                  wq_sleep
+                                  do_mq_timedreceive
+                                  __x64_sys_mq_timedreceive
+                                  x64_sys_call
+                                  do_syscall_64
+                                  entry_SYSCALL_64_after_hwframe
+                                  mq_timedreceive@@GLIBC_2.34
+                                  __libc_start_call_main
+                                  __libc_start_main@@GLIBC_2.34
+                                  _start
+
+     3.07%  pingpong  [kernel.kallsyms]  [k] do_syscall_64
+            |          
+             --0.89%--do_mq_timedsend
+                       __x64_sys_mq_timedsend
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedsend@@GLIBC_2.34
+                       __libc_start_call_main
+                       __libc_start_main@@GLIBC_2.34
+                       _start
+
+     3.03%  pingpong  [kernel.kallsyms]  [k] __check_heap_object
+            |          
+             --0.74%--0x7bf56ff94c4b
+                       clock_gettime@@GLIBC_2.17
+                       main
+                       __libc_start_call_main
+                       __libc_start_main@@GLIBC_2.34
+                       _start
+
+     2.94%  pingpong  [kernel.kallsyms]  [k] dequeue_entities
+            |          
+             --0.71%--ctx_sched_out
+                       perf_event_context_sched_out
+                       __perf_event_task_sched_out
+                       prepare_task_switch
+                       __schedule
+                       schedule
+                       schedule_hrtimeout_range_clock
+                       wq_sleep
+                       do_mq_timedreceive
+                       __x64_sys_mq_timedreceive
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedreceive@@GLIBC_2.34
+                       __libc_start_call_main
+                       __libc_start_main@@GLIBC_2.34
+                       _start
+
+     2.90%  pingpong  [kernel.kallsyms]  [k] update_curr
+            |          
+             --0.63%--dequeue_entity
+                       dequeue_entities
+                       dequeue_task_fair
+                       dequeue_task
+                       try_to_block_task.constprop.0.isra.0
+                       __schedule
+                       schedule
+                       schedule_hrtimeout_range_clock
+                       wq_sleep
+                       do_mq_timedreceive
+                       __x64_sys_mq_timedreceive
+                       x64_sys_call
+                       do_syscall_64
+                       entry_SYSCALL_64_after_hwframe
+                       mq_timedreceive@@GLIBC_2.34
+                       __libc_start_call_main
+                       __libc_start_main@@GLIBC_2.34
+                       _start
+
+     2.31%  pingpong  [kernel.kallsyms]  [k] native_sched_clock
+            |          
+            |--0.84%--__cgroup_account_cputime
+            |          update_se
+            |          update_curr
+            |          dequeue_entity
+            |          dequeue_entities
+            |          dequeue_task_fair
+            |          dequeue_task
+            |          try_to_block_task.constprop.0.isra.0
+            |          __schedule
+            |          schedule
+            |          schedule_hrtimeout_range_clock
+            |          wq_sleep
+
+
+## Top 30 call chains (WITH CHILDREN, hot-path roll-up)
+
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 489  of event 'cycles:P'
+# Event count (approx.): 2001060130
+#
+# Children      Self  Command   Shared Object      Symbol                                   
+# ........  ........  ........  .................  .........................................
+#
+    99.99%     0.00%  pingpong  pingpong           [.] _start
+            |
+            ---_start
+               __libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               |          
+               |--67.90%--mq_timedreceive@@GLIBC_2.34
+               |          |          
+               |           --67.08%--entry_SYSCALL_64_after_hwframe
+               |                     |          
+               |                      --66.80%--do_syscall_64
+               |                                |          
+               |                                |--64.92%--x64_sys_call
+               |                                |          __x64_sys_mq_timedreceive
+               |                                |          |          
+               |                                |          |--61.71%--do_mq_timedreceive
+               |                                |          |          |          
+               |                                |          |          |--55.24%--wq_sleep
+               |                                |          |          |          |          
+               |                                |          |          |           --53.80%--schedule_hrtimeout_range_clock
+               |                                |          |          |                     |          
+               |                                |          |          |                      --53.19%--schedule
+               |                                |          |          |                                |          
+               |                                |          |          |                                 --52.74%--__schedule
+               |                                |          |          |                                           |          
+               |                                |          |          |                                           |--22.69%--try_to_block_task.constprop.0.isra.0
+               |                                |          |          |                                           |          |          
+               |                                |          |          |                                           |           --22.42%--dequeue_task
+               |                                |          |          |                                           |                     dequeue_task_fair
+               |                                |          |          |                                           |                     dequeue_entities
+               |                                |          |          |                                           |                     |          
+               |                                |          |          |                                           |                      --20.42%--dequeue_entity
+               |                                |          |          |                                           |                                |          
+               |                                |          |          |                                           |                                |--6.48%--update_curr
+               |                                |          |          |                                           |                                |          |          
+               |                                |          |          |                                           |                                |          |--3.13%--update_se
+               |                                |          |          |                                           |                                |          |          |          
+               |                                |          |          |                                           |                                |          |           --1.06%--__cgroup_account_cputime
+               |                                |          |          |                                           |                                |          |          
+               |                                |          |          |                                           |                                |           --0.59%--__calc_delta.constprop.0
+               |                                |          |          |                                           |                                |          
+               |                                |          |          |                                           |                                |--4.41%--update_load_avg
+               |                                |          |          |                                           |                                |          |          
+               |                                |          |          |                                           |                                |          |--1.02%--__update_load_avg_se
+               |                                |          |          |                                           |                                |          |          
+               |                                |          |          |                                           |                                |           --0.71%--__update_load_avg_cfs_rq
+               |                                |          |          |                                           |                                |          
+               |                                |          |          |                                           |                                |--1.67%--update_entity_lag
+               |                                |          |          |                                           |                                |          |          
+               |                                |          |          |                                           |                                |           --0.51%--__calc_delta.constprop.0
+               |                                |          |          |                                           |                                |          
+               |                                |          |          |                                           |                                |--1.10%--__update_load_avg_cfs_rq
+               |                                |          |          |                                           |                                |          
+               |                                |          |          |                                           |                                |--0.89%--propagate_entity_load_avg
+               |                                |          |          |                                           |                                |          
+               |                                |          |          |                                           |                                 --0.56%--avg_vruntime
+               |                                |          |          |                                           |          
+               |                                |          |          |                                           |--16.23%--prepare_task_switch
+               |                                |          |          |                                           |          |          
+               |                                |          |          |                                           |           --16.02%--__perf_event_task_sched_out
+               |                                |          |          |                                           |                     |          
+               |                                |          |          |                                           |                      --14.60%--perf_event_context_sched_out
+               |                                |          |          |                                           |                                |          
+               |                                |          |          |                                           |                                |--12.36%--ctx_sched_out
+               |                                |          |          |                                           |                                |          |          
+               |                                |          |          |                                           |                                |          |--8.67%--__pmu_ctx_sched_out
+               |                                |          |          |                                           |                                |          |          |          
+               |                                |          |          |                                           |                                |          |           --8.17%--group_sched_out
+               |                                |          |          |                                           |                                |          |                     |          
+               |                                |          |          |                                           |                                |          |                      --7.31%--event_sched_out
+               |                                |          |          |                                           |                                |          |                                |          
+               |                                |          |          |                                           |                                |          |                                 --7.12%--perf_ibs_del
+               |                                |          |          |                                           |                                |          |                                           |          
+               |                                |          |          |                                           |                                |          |                                            --6.89%--perf_ibs_stop
+               |                                |          |          |                                           |                                |          |                                                      |          
+               |                                |          |          |                                           |                                |          |                                                       --4.49%--native_read_msr
+               |                                |          |          |                                           |                                |          |          
+               |                                |          |          |                                           |                                |           --1.63%--local_clock
+               |                                |          |          |                                           |                                |                     |          
+               |                                |          |          |                                           |                                |                      --1.06%--local_clock_noinstr
+               |                                |          |          |                                           |                                |                                |          
+               |                                |          |          |                                           |                                |                                 --0.81%--sched_clock_noinstr
+               |                                |          |          |                                           |                                |                                           native_sched_clock
+               |                                |          |          |                                           |                                |          
+               |                                |          |          |                                           |                                 --0.77%--perf_ctx_disable
+               |                                |          |          |                                           |          
+               |                                |          |          |                                           |--5.98%--psi_task_switch
+               |                                |          |          |                                           |          |          
+               |                                |          |          |                                           |           --2.56%--psi_group_change
+               |                                |          |          |                                           |          
+               |                                |          |          |                                           |--4.47%--pick_next_task
+               |                                |          |          |                                           |          |          
+               |                                |          |          |                                           |           --4.05%--__pick_next_task
+               |                                |          |          |                                           |                     |          
+               |                                |          |          |                                           |                     |--1.55%--pick_next_task_fair
+               |                                |          |          |                                           |                     |          |          
+               |                                |          |          |                                           |                     |           --0.81%--sched_balance_newidle
+               |                                |          |          |                                           |                     |          
+               |                                |          |          |                                           |                      --0.95%--put_prev_task_fair
+               |                                |          |          |                                           |          
+               |                                |          |          |                                            --0.82%--psi_group_change
+               |                                |          |          |          
+               |                                |          |           --5.88%--free_msg
+               |                                |          |                     |          
+               |                                |          |                     |--5.28%--kfree
+               |                                |          |                     |          |          
+               |                                |          |                     |          |--3.08%--__memcg_slab_free_hook
+               |                                |          |                     |          |          
+               |                                |          |                     |           --2.20%--__slab_free
+               |                                |          |                     |                     |          
+               |                                |          |                     |                      --1.87%--slab_update_freelist.isra.0
+               |                                |          |                     |          
+               |                                |          |                      --0.60%--security_msg_msg_free
+               |                                |          |                                kfree
+               |                                |          |          
+               |                                |           --3.00%--_raw_spin_lock
+               |                                |          
+               |                                 --1.54%--exit_to_user_mode_loop
+               |                                           |          
+               |                                            --0.74%--__rseq_handle_notify_resume
+               |          
+               |--28.15%--mq_timedsend@@GLIBC_2.34
+               |          |          
+               |          |--27.57%--entry_SYSCALL_64_after_hwframe
+               |          |          |          
+               |          |           --27.21%--do_syscall_64
+               |          |                     |          
+               |          |                      --26.55%--x64_sys_call
+               |          |                                |          
+               |          |                                 --25.87%--__x64_sys_mq_timedsend
+               |          |                                           |          
+               |          |                                           |--21.06%--do_mq_timedsend
+               |          |                                           |          |          
+               |          |                                           |          |--7.20%--wake_up_q
+               |          |                                           |          |          |          
+               |          |                                           |          |           --7.00%--try_to_wake_up
+               |          |                                           |          |                     |          
+               |          |                                           |          |                     |--5.43%--ttwu_queue_wakelist
+               |          |                                           |          |                     |          |          
