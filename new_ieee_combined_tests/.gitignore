@@ -3,24 +3,24 @@ __pycache__/
 *.pyc
 
 # Generated benchmark outputs
-results/raw/posix/all_runs.csv
-results/raw/sysv/all_runs.csv
-results/raw/combined/all_runs.csv
-results/analysis/figures/*
-results/analysis/tables/*
-results/analysis/analysis_report.md
-results/logs/*.log
-results/logs/topology.txt
-results/perf/
-results/strace/
+#results/raw/posix/all_runs.csv
+#results/raw/sysv/all_runs.csv
+#results/raw/combined/all_runs.csv
+#results/analysis/figures/*
+#results/analysis/tables/*
+#results/analysis/analysis_report.md
+#results/logs/*.log
+#results/logs/topology.txt
+#results/perf/
+#results/strace/
 
 # Vendored stack build outputs
 stacks/POSIX/bin/
-stacks/POSIX/results/
-stacks/POSIX/analysis/results/
+#stacks/POSIX/results/
+#stacks/POSIX/analysis/results/
 stacks/SYSV/bin/
-stacks/SYSV/results/
-stacks/SYSV/analysis/results/
+#stacks/SYSV/results/
+#stacks/SYSV/analysis/results/
 stacks/**/__pycache__/
 
 # Keep directories

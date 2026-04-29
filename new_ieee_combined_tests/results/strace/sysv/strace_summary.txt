@@ -1,0 +1,450 @@
+╔══════════════════════════════════════════════════════════════╗
+║  STRACE SYSCALL SUMMARY — SYSV
+║  Generated: 2026-04-28T22:13:28+05:30                        ║
+║  Runs per config: 1                                          ║
+╚══════════════════════════════════════════════════════════════╝
+
+============================================================
+MQ pingpong | same_core | 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/pingpong
+# Args   : -n 50000 -s 64 -c 0,6 -p same_core
+# Run    : 1/1
+# Date   : 2026-04-28T22:13:28+05:30
+
+strace: Process 23887 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 49.97    1.190632     1190632         1           wait4
+ 25.87    0.616365           5    105000           msgrcv
+ 24.16    0.575551           5    105000           msgsnd
+  0.00    0.000083          83         1           clone
+  0.00    0.000045          22         2           sched_setaffinity
+  0.00    0.000031           2        11           mmap
+  0.00    0.000021           7         3           brk
+  0.00    0.000000           0         1           read
+  0.00    0.000000           0         1           write
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         3           fstat
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         4           munmap
+  0.00    0.000000           0         1         1 ioctl
+  0.00    0.000000           0         2           pread64
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         4         2 msgget
+  0.00    0.000000           0         6           msgctl
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         2           openat
+  0.00    0.000000           0         2           set_robust_list
+  0.00    0.000000           0         1           prlimit64
+  0.00    0.000000           0         1           getrandom
+  0.00    0.000000           0         1           rseq
+------ ----------- ----------- --------- --------- ------------------
+100.00    2.382728          11    210056         4 total
+
+
+============================================================
+MQ pingpong | cross_core | 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/pingpong
+# Args   : -n 50000 -s 64 -c 0,1 -p cross_core
+# Run    : 1/1
+# Date   : 2026-04-28T22:13:31+05:30
+
+strace: Process 23895 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 50.00    0.782321      782321         1           wait4
+ 27.33    0.427521           4    105000           msgsnd
+ 22.63    0.354008           3    105000           msgrcv
+  0.02    0.000244         244         1           execve
+  0.01    0.000135          12        11           mmap
+  0.00    0.000075          75         1           clone
+  0.00    0.000028           9         3           mprotect
+  0.00    0.000021           5         4           munmap
+  0.00    0.000021           5         4         2 msgget
+  0.00    0.000021          10         2           openat
+  0.00    0.000018           3         6           msgctl
+  0.00    0.000016           5         3           fstat
+  0.00    0.000016           5         3           brk
+  0.00    0.000016           8         2           sched_setaffinity
+  0.00    0.000014           7         2           pread64
+  0.00    0.000010          10         1         1 access
+  0.00    0.000010           5         2           set_robust_list
+  0.00    0.000009           4         2           close
+  0.00    0.000007           7         1           read
+  0.00    0.000007           7         1           rseq
+  0.00    0.000006           6         1           arch_prctl
+  0.00    0.000005           5         1           set_tid_address
+  0.00    0.000005           5         1           prlimit64
+  0.00    0.000005           5         1           getrandom
+  0.00    0.000000           0         1           write
+  0.00    0.000000           0         1         1 ioctl
+------ ----------- ----------- --------- --------- ------------------
+100.00    1.564539           7    210056         4 total
+
+
+============================================================
+SHM pingpong | same_core | 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/shm_pingpong
+# Args   : -n 50000 -s 64 -c 0,6 -p same_core
+# Run    : 1/1
+# Date   : 2026-04-28T22:13:33+05:30
+
+strace: Process 23902 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 53.22    1.155180     1155180         1           wait4
+ 46.77    1.015261           4    210000           semtimedop
+  0.00    0.000065          32         2           sched_setaffinity
+  0.00    0.000064          64         1           clone
+  0.00    0.000026           2        11           mmap
+  0.00    0.000020          10         2           shmdt
+  0.00    0.000017           8         2         1 shmget
+  0.00    0.000014          14         1           shmat
+  0.00    0.000012           4         3           mprotect
+  0.00    0.000012           3         4           munmap
+  0.00    0.000011           3         3           brk
+  0.00    0.000010           5         2         1 semget
+  0.00    0.000005           2         2           semctl
+  0.00    0.000004           4         1           prlimit64
+  0.00    0.000004           4         1           getrandom
+  0.00    0.000000           0         1           read
+  0.00    0.000000           0         1           write
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         3           fstat
+  0.00    0.000000           0         1         1 ioctl
+  0.00    0.000000           0         2           pread64
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           shmctl
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         2           openat
+  0.00    0.000000           0         2           set_robust_list
+  0.00    0.000000           0         1           rseq
+------ ----------- ----------- --------- --------- ------------------
+100.00    2.170705          10    210056         4 total
+
+
+============================================================
+SHM pingpong | cross_core | 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/shm_pingpong
+# Args   : -n 50000 -s 64 -c 0,1 -p cross_core
+# Run    : 1/1
+# Date   : 2026-04-28T22:13:36+05:30
+
+strace: Process 23914 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 50.24    0.764047           3    210000           semtimedop
+ 49.73    0.756260      756260         1           wait4
+  0.01    0.000098          98         1           clone
+  0.01    0.000077           7        11           mmap
+  0.00    0.000033          16         2           sched_setaffinity
+  0.00    0.000020           6         3           mprotect
+  0.00    0.000018           9         2           shmdt
+  0.00    0.000015           7         2         1 shmget
+  0.00    0.000013           3         4           munmap
+  0.00    0.000012           4         3           fstat
+  0.00    0.000011           3         3           brk
+  0.00    0.000011          11         1           shmat
+  0.00    0.000010           5         2         1 semget
+  0.00    0.000008           4         2           pread64
+  0.00    0.000008           4         2           set_robust_list
+  0.00    0.000007           3         2           close
+  0.00    0.000007           3         2           openat
+  0.00    0.000005           5         1           read
+  0.00    0.000005           2         2           semctl
+  0.00    0.000005           5         1           prlimit64
+  0.00    0.000004           4         1           arch_prctl
+  0.00    0.000004           4         1           set_tid_address
+  0.00    0.000004           4         1           getrandom
+  0.00    0.000003           3         1           rseq
+  0.00    0.000000           0         1           write
+  0.00    0.000000           0         1         1 ioctl
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           shmctl
+  0.00    0.000000           0         1           execve
+------ ----------- ----------- --------- --------- ------------------
+100.00    1.520685           7    210056         4 total
+
+
+============================================================
+MQ throughput | same_core | depth=1 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/throughput
+# Args   : -n 200000 -s 64 -q 1 -c 0,6 -p same_core_q1
+# Run    : 1/1
+# Date   : 2026-04-28T22:13:38+05:30
+
+strace: Process 23922 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 49.70    2.286428     2286428         1           wait4
+ 25.68    1.181516           5    205000           msgrcv
+ 24.60    1.131865           5    205000           msgsnd
+  0.01    0.000237         237         1           execve
+  0.00    0.000067          33         2           sched_setaffinity
+  0.00    0.000064          64         1           clone
+  0.00    0.000061           7         8           mmap
+  0.00    0.000020           6         3           mprotect
+  0.00    0.000019           4         4           msgctl
+  0.00    0.000016           3         5           brk
+  0.00    0.000013           4         3           fstat
+  0.00    0.000012          12         1           munmap
+  0.00    0.000012           6         2         1 msgget
+  0.00    0.000012           6         2           openat
+  0.00    0.000010           5         2           getrandom
+  0.00    0.000008           4         2           pread64
+  0.00    0.000007           3         2           close
+  0.00    0.000005           5         1           read
+  0.00    0.000005           5         1         1 access
+  0.00    0.000004           4         1           write
+  0.00    0.000004           4         1         1 ioctl
+  0.00    0.000004           4         1           arch_prctl
+  0.00    0.000004           4         1           set_tid_address
+  0.00    0.000004           2         2           set_robust_list
+  0.00    0.000004           4         1           prlimit64
+  0.00    0.000004           4         1           rseq
+------ ----------- ----------- --------- --------- ------------------
+100.00    4.600405          11    410049         3 total
+
+
+============================================================
+MQ throughput | same_core | depth=128 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/throughput
+# Args   : -n 200000 -s 64 -q 128 -c 0,6 -p same_core_q128
+# Run    : 1/1
+# Date   : 2026-04-28T22:13:43+05:30
+
+strace: Process 23931 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 50.98    2.234975     2234975         1           wait4
+ 25.94    1.137045           5    205000           msgrcv
+ 23.08    1.011771           4    205000           msgsnd
+  0.00    0.000064          64         1           clone
+  0.00    0.000042          21         2           sched_setaffinity
+  0.00    0.000021           7         3           mprotect
+  0.00    0.000018           4         4           msgctl
+  0.00    0.000017           3         5           brk
+  0.00    0.000016           2         8           mmap
+  0.00    0.000013          13         1           munmap
+  0.00    0.000012           6         2           getrandom
+  0.00    0.000010           5         2         1 msgget
+  0.00    0.000005           1         3           fstat
+  0.00    0.000004           4         1           write
+  0.00    0.000004           4         1         1 ioctl
+  0.00    0.000004           4         1           arch_prctl
+  0.00    0.000004           2         2           set_robust_list
+  0.00    0.000004           4         1           prlimit64
+  0.00    0.000004           4         1           rseq
+  0.00    0.000003           1         2           close
+  0.00    0.000003           3         1           set_tid_address
+  0.00    0.000000           0         1           read
+  0.00    0.000000           0         2           pread64
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         2           openat
+------ ----------- ----------- --------- --------- ------------------
+100.00    4.384039          10    410049         3 total
+
+
+============================================================
+MQ scalability fan-in | n=8 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/scalability
+# Args   : -m c1 -n 8 -k 10000 -s 64 -p fanin_n8
+# Run    : 1/1
+# Date   : 2026-04-28T22:13:48+05:30
+
+strace: Process 23941 attached
+strace: Process 23942 attached
+strace: Process 23943 attached
+strace: Process 23944 attached
+strace: Process 23945 attached
+strace: Process 23946 attached
+strace: Process 23947 attached
+strace: Process 23948 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 48.05    2.087753      260969         8           wait4
+ 38.75    1.683936          21     80000           msgsnd
+ 13.19    0.573370           7     80000           msgrcv
+  0.00    0.000109          12         9           sched_setaffinity
+  0.00    0.000085           5        15           openat
+  0.00    0.000053           3        14           read
+  0.00    0.000035           2        15           close
+  0.00    0.000013           1         7           fstat
+  0.00    0.000007           2         3           msgctl
+  0.00    0.000004           4         1           write
+  0.00    0.000004           4         1         1 ioctl
+  0.00    0.000000           0         8           mmap
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         2           pread64
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         8           clone
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         2         1 msgget
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         9           set_robust_list
+  0.00    0.000000           0         1           prlimit64
+  0.00    0.000000           0         1           getrandom
+  0.00    0.000000           0         1           rseq
+------ ----------- ----------- --------- --------- ------------------
+100.00    4.345369          27    160116         3 total
+
+
+============================================================
+MQ scalability pairs | n=4 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/scalability
+# Args   : -m c2 -n 4 -k 10000 -s 64 -p pairs_n4
+# Run    : 1/1
+# Date   : 2026-04-28T22:13:50+05:30
+
+strace: Process 23955 attached
+strace: Process 23956 attached
+strace: Process 23957 attached
+strace: Process 23958 attached
+strace: Process 23959 attached
+strace: Process 23960 attached
+strace: Process 23961 attached
+strace: Process 23962 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 65.13    1.779627      222453         8           wait4
+ 19.18    0.524059           6     80000           msgrcv
+ 15.68    0.428388           5     80000           msgsnd
+  0.00    0.000111          22         5           write
+  0.00    0.000059           0        86           close
+  0.00    0.000035           1        24         3 read
+  0.00    0.000029           7         4           munmap
+  0.00    0.000025           3         8           sched_setaffinity
+  0.00    0.000019           1        11           mmap
+  0.00    0.000019           1        14           openat
+  0.00    0.000013           0        24         8 msgget
+  0.00    0.000010           0        24           msgctl
+  0.00    0.000009           1         7           fstat
+  0.00    0.000001           1         1         1 ioctl
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         2           pread64
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         8           clone
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         9           set_robust_list
+  0.00    0.000000           0         4           pipe2
+  0.00    0.000000           0         1           prlimit64
+  0.00    0.000000           0         1           getrandom
+  0.00    0.000000           0         1           rseq
+------ ----------- ----------- --------- --------- ------------------
+100.00    2.732404          17    160252        13 total
+
+
+============================================================
+SHM throughput | same_core | depth=128 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/shm_throughput
+# Args   : -n 200000 -s 64 -q 128 -c 0,6 -p same_core_q128
+# Run    : 1/1
+# Date   : 2026-04-28T22:13:51+05:30
+
+strace: Process 23971 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 51.52    4.309730     4309730         1           wait4
+ 48.48    4.055585           4    820000           semtimedop
+  0.00    0.000078          78         1           clone
+  0.00    0.000041          20         2           sched_setaffinity
+  0.00    0.000029          14         2           shmdt
+  0.00    0.000020           4         5           brk
+  0.00    0.000018          18         1           shmctl
+  0.00    0.000007           2         3           fstat
+  0.00    0.000007           7         1         1 ioctl
+  0.00    0.000006           3         2           semctl
+  0.00    0.000005           2         2           getrandom
+  0.00    0.000004           4         1           write
+  0.00    0.000000           0         1           read
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         8           mmap
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         2           pread64
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         2         1 shmget
+  0.00    0.000000           0         1           shmat
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         2         1 semget
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         2           openat
+  0.00    0.000000           0         2           set_robust_list
+  0.00    0.000000           0         1           prlimit64
+  0.00    0.000000           0         1           rseq
+------ ----------- ----------- --------- --------- ------------------
+100.00    8.365530          10    820053         4 total
+
+
+============================================================
+SHM scalability pairs | n=4 64B
+============================================================
+# Binary : /home/nirbhay/Desktop/new_ieee_combined_tests/new_ieee_combined_tests/stacks/SYSV/bin/shm_pairs
+# Args   : -n 4 -k 10000 -s 64 -p pairs_n4
+# Run    : 1/1
+# Date   : 2026-04-28T22:14:01+05:30
+
+strace: Process 23977 attached
+strace: Process 23978 attached
+strace: Process 23979 attached
+strace: Process 23980 attached
+strace: Process 23981 attached
+strace: Process 23982 attached
+strace: Process 23983 attached
+strace: Process 23984 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ------------------
+ 65.22    1.832174      229021         8           wait4
+ 34.73    0.975696           5    168000           semtimedop
+  0.02    0.000609          76         8           clone
+  0.01    0.000302          23        13         3 read
+  0.01    0.000142          28         5           write
+  0.00    0.000085           1        75           close
+  0.00    0.000034           4         8           sched_setaffinity
+  0.00    0.000022           2        11           mmap
+  0.00    0.000019           2         8         4 shmget
+  0.00    0.000017           5         3           openat
+  0.00    0.000015           1         8         4 semget
+  0.00    0.000015           3         4           pipe2
+  0.00    0.000014           3         4           shmat
+  0.00    0.000008           1         8           semctl
+  0.00    0.000000           0         3           fstat
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         4           munmap
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         1         1 ioctl
+  0.00    0.000000           0         2           pread64
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         4           shmctl
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         4           shmdt
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         9           set_robust_list
+  0.00    0.000000           0         1           prlimit64
+  0.00    0.000000           0         1           getrandom
+  0.00    0.000000           0         1           rseq
+------ ----------- ----------- --------- --------- ------------------
+100.00    2.809152          16    168203        13 total
+
